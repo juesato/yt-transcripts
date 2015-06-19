@@ -8,3 +8,18 @@ button {
     background-color:transparent;
     border:0;
 }
+
+#transcript span {
+  display: inline;
+  /*padding: 4px 2px;*/
+  line-height: 20px;
+  cursor: pointer;
+  color: #333;
+  font-family: Helvetica, Arial, sans-serif;
+  width: 960px;
+  /*margin: 10px auto;*/
+}
+
+#transcript span:hover {
+	color: red;
+}
