@@ -1,4 +1,5 @@
-var curVideoId = 'OJpQgSZ49tk';
+// var curVideoId = 'k6U-i4gXkLM';
+var curVideoId = 'lZ3bPUKo5zc';
 var player;
 
 function onYouTubeIframeAPIReady() {
@@ -6,7 +7,7 @@ function onYouTubeIframeAPIReady() {
         videoId: curVideoId,
         playerVars: {
             controls: 1,
-            autoplay: 1,
+            autoplay: 0,
             disablekb: 1,
             enablejsapi: 1,
             iv_load_policy: 3,
@@ -23,6 +24,8 @@ function loadVideo() {
 
 	curVideoId = ytId;
 	player.loadVideoById(ytId);
+
+	loadTranscript();
 	// document.getElementById("video-frame").src = embedStr;
 }
 
@@ -39,20 +42,39 @@ function getYoutubeId(url) {
 
 function getTranscriptXML(ytId) {
 	var xhr = new XMLHttpRequest();
-	var async = false;
+	var async = true;
 	xhr.open("GET", "http://www.youtube.com/api/timedtext?lang=en&v=" + ytId, async);
 	xhr.send()
+
+	console.log("http://www.youtube.com/api/timedtext?lang=en&v=" + ytId);
+	console.log(xhr);
+	console.log(xhr.responseXML);
+	// TODO: Catch errors if manual transcript is unavailable
 	return xhr.responseXML.firstChild;
 }
 
-var xml = getTranscriptXML("lZ3bPUKo5zc");
+function loadTranscript() {
+	console.log("loadTranscript");
+	var xml = getTranscriptXML(curVideoId);
 
+	var transcriptDiv = document.getElementById("transcript");
+	var transcriptPar = transcriptDiv.childNodes[0];
+	transcriptPar.clear();
 
-var nodes = xml.getElementsByTagName("text");
-for (var i = 0; i < nodes.length; i++) {
-	var dur = nodes[i].getAttribute("dur");
-	var start = nodes[i].getAttribute("start");
-	var text = nodes[i].innerHTML;
-	// console.log(dur + " " + start + " " + text);
+	var nodes = xml.getElementsByTagName("text");
+	for (var i = 0; i < nodes.length; i++) {
+		console.log("hey");
+		var dur = nodes[i].getAttribute("dur");
+		var start = nodes[i].getAttribute("start");
+		var text = nodes[i].innerHTML;
+		// console.log(dur + " " + start + " " + text);
+
+		var iDiv = document.createElement("div");
+		iDiv.id = "caption" + i;
+		iDiv.innerHTML = text;
+
+		transcriptPar.appendChild(iDiv);
+	}	
 }
 
+loadTranscript();
