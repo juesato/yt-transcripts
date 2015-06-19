@@ -42,15 +42,26 @@ function getYoutubeId(url) {
 
 function getTranscriptXML(ytId) {
 	var xhr = new XMLHttpRequest();
-	var async = true;
+	var async = false;
 	xhr.open("GET", "http://www.youtube.com/api/timedtext?lang=en&v=" + ytId, async);
 	xhr.send()
 
-	console.log("http://www.youtube.com/api/timedtext?lang=en&v=" + ytId);
-	console.log(xhr);
-	console.log(xhr.responseXML);
+	// console.log(xhr);
+
 	// TODO: Catch errors if manual transcript is unavailable
 	return xhr.responseXML.firstChild;
+}
+
+function cleanTranscript(lines) {
+	var clean = [];
+	var cur = {};
+	for (var i = 0; i < lines.length; i++) {
+		var line = lines[i].txt;
+		// line = line.replace(/\s+/g, ''); // I don't believe trimming whitespace is necessary
+		if (line.slice(-1) == '.') {
+			
+		}
+	}
 }
 
 function loadTranscript() {
@@ -58,23 +69,30 @@ function loadTranscript() {
 	var xml = getTranscriptXML(curVideoId);
 
 	var transcriptDiv = document.getElementById("transcript");
-	var transcriptPar = transcriptDiv.childNodes[0];
-	transcriptPar.clear();
+	transcriptDiv.innerHTML = "";
 
 	var nodes = xml.getElementsByTagName("text");
+	
+	var lines = [];
 	for (var i = 0; i < nodes.length; i++) {
-		console.log("hey");
 		var dur = nodes[i].getAttribute("dur");
 		var start = nodes[i].getAttribute("start");
 		var text = nodes[i].innerHTML;
 		// console.log(dur + " " + start + " " + text);
 
-		var iDiv = document.createElement("div");
-		iDiv.id = "caption" + i;
-		iDiv.innerHTML = text;
+		var cur = {};
+		cur.dur = dur;
+		cur.sta = start;
+		cur.txt = text;
+		lines.push(cur);
 
-		transcriptPar.appendChild(iDiv);
+		// var iDiv = document.createElement("span");
+		// iDiv.id = "caption" + i;
+		// iDiv.innerHTML = text + " ";
+
+		// transcriptDiv.appendChild(iDiv);
 	}	
+	var clean = cleanTranscript(lines);
 }
 
-loadTranscript();
+$(document).ready(loadTranscript);
