@@ -1,9 +1,29 @@
+var curVideoId = 'OJpQgSZ49tk';
+var player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        videoId: curVideoId,
+        playerVars: {
+            controls: 1,
+            autoplay: 1,
+            disablekb: 1,
+            enablejsapi: 1,
+            iv_load_policy: 3,
+            // modestbranding: 1,
+            showinfo: 1
+        }
+    });
+}
+
 function loadVideo() {
 	var ytUrl = document.getElementById("yt-link").value;
 	var ytId = getYoutubeId(ytUrl);
 	var embedStr = 'http://www.youtube.com/embed/' + ytId;
 
-	document.getElementById("video-frame").src = embedStr;
+	curVideoId = ytId;
+	player.loadVideoById(ytId);
+	// document.getElementById("video-frame").src = embedStr;
 }
 
 function getYoutubeId(url) {
@@ -35,3 +55,4 @@ for (var i = 0; i < nodes.length; i++) {
 	var text = nodes[i].innerHTML;
 	// console.log(dur + " " + start + " " + text);
 }
+
