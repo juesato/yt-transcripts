@@ -52,16 +52,43 @@ function getTranscriptXML(ytId) {
 	return xhr.responseXML.firstChild;
 }
 
+function cleanLine(line) {
+	var clean = line;
+	clean = clean.replace(/&amp;/g, "&");
+	clean = clean.replace(/&lt;/g, "<");
+	clean = clean.replace(/&gt;/g, ">");
+	clean = clean.replace(/&quot;/g, '"');
+	clean = clean.replace(/&#37;/g, "%");
+	clean = clean.replace(/&#39;/g, "'");
+
+	// console.log(clean);
+	return clean;
+}
+
+var punctuation = ['.', '?', '!'];
+
 function cleanTranscript(lines) {
 	var clean = [];
 	var cur = {};
+	cur.txt = "";
 	for (var i = 0; i < lines.length; i++) {
 		var line = lines[i].txt;
+		line = cleanLine(line);
+
 		// line = line.replace(/\s+/g, ''); // I don't believe trimming whitespace is necessary
-		if (line.slice(-1) == '.') {
-			
+		if (cur.txt == "") {
+			cur.dur = lines[i].dur;
+		}
+
+		cur.txt += (line + " ");
+
+		if (punctuation.indexOf(line.slice(-1)) != -1) {
+			clean.push(JSON.parse(JSON.stringify(cur)));
+			cur.txt = ""; // Reset
 		}
 	}
+
+	return clean;
 }
 
 function loadTranscript() {
@@ -93,6 +120,14 @@ function loadTranscript() {
 		// transcriptDiv.appendChild(iDiv);
 	}	
 	var clean = cleanTranscript(lines);
+
+	for (var i = 0; i < clean.length; i++) {
+		var iSpan = document.createElement("span");
+		iSpan.id = "caption" + i;
+		iSpan.sta = clean[i].sta;
+		iSpan.innerHTML = clean[i].txt;
+		transcriptDiv.appendChild(iSpan);
+	}
 }
 
 $(document).ready(loadTranscript);
