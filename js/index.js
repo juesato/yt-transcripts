@@ -77,7 +77,7 @@ function cleanTranscript(lines) {
 
 		// line = line.replace(/\s+/g, ''); // I don't believe trimming whitespace is necessary
 		if (cur.txt == "") {
-			cur.dur = lines[i].dur;
+			cur.sta = lines[i].sta;
 		}
 
 		cur.txt += (line + " ");
@@ -89,6 +89,10 @@ function cleanTranscript(lines) {
 	}
 
 	return clean;
+}
+
+function setVideoTime(sec) {
+	player.seekTo(sec, true);
 }
 
 function loadTranscript() {
@@ -124,7 +128,8 @@ function loadTranscript() {
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
-		iSpan.sta = clean[i].sta;
+		// iSpan.setAttribute("data-time", clean[i].sta);
+		iSpan.setAttribute("onclick", "setVideoTime(" + clean[i].sta + ")");;
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 	}
