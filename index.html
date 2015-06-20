@@ -5,27 +5,33 @@
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<script src="https://www.youtube.com/iframe_api"></script>	
 	<script src="js/jquery-1.11.3.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 
 	<script src="js/index.js"></script>
 </head>
 <body>
-  <div>
+
+  <nav>
+  	<ul>
 		<div class="wrapper">
 	    <input type="text" id="yt-link" value="Enter a YouTube URL"/>
 	    <button type="button" onclick="loadVideo()">GO</button>
 		</div>
-		
-		<div id="player"></div>
+	</ul>
+  </nav>
+
+  <div>
+
+	<div id="left">
+	  <div id="player"></div>
+	</div>
 <!-- 		<div class="video-viewer">
 			<iframe width="560" height="315" id="video-frame" src="http://www.youtube.com/embed/ZoD6BH76EEU"></iframe> 
 		</div> -->
+	<div id="resize-handle"></div>
+	<div id="right">
+	  <div id="transcript"></div>
 	</div>
-
-	<div id="transcript">
-		<!-- 	<span id="caption1">This is the first line </span>
-			<span id="caption2">which runs into the second. </span>
-			<span id="caption3">This is the third line </span>
-			<span id="caption4">and this is perfect flow. </span>		 -->	
-	</div>
+  </div>
 </body>
 

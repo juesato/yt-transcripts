@@ -23,3 +23,27 @@ button {
 #transcript span:hover {
 	color: red;
 }
+
+#left, #right {
+  vertical-align:top;
+  display: inline-table;
+  background: #faa;
+  width: 40%;
+  overflow: scroll;
+}
+
+#left {
+  margin-right: 22px;
+}
+
+
+#resize-handle {
+  display: block;
+  bottom:0;
+  background: #ddd;
+  width: 22px;
+  position: absolute;
+  top:0;
+  left:40%;
+  cursor:e-resize;
+}
