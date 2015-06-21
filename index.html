@@ -2,7 +2,10 @@
 <head>
 	<title> Interactive Transcript Viewer </title> 
 	<!-- TODO: make this this YouViewer - Video Title -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="index.css">
+<meta name="viewport" content="initial-scale=1">
+
 	<script src="https://www.youtube.com/iframe_api"></script>	
 	<script src="js/jquery-1.11.3.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
@@ -10,28 +13,44 @@
 	<script src="js/index.js"></script>
 </head>
 <body>
-
-  <nav>
+  <div class="container">
+<!--   <nav>
   	<ul>
 		<div class="wrapper">
 	    <input type="text" id="yt-link" value="Enter a YouTube URL"/>
 	    <button type="button" onclick="loadVideo()">GO</button>
 		</div>
 	</ul>
-  </nav>
+  </nav> -->
 
-  <div>
+    <div id="navbar" class="navbar">
 
-	<div id="left">
-	  <div id="player"></div>
-	</div>
-<!-- 		<div class="video-viewer">
-			<iframe width="560" height="315" id="video-frame" src="http://www.youtube.com/embed/ZoD6BH76EEU"></iframe> 
-		</div> -->
-	<div id="resize-handle"></div>
-	<div id="right">
-	  <div id="transcript"></div>
-	</div>
+<!--     	<div class="input-group">
+    	<input type="text" placeholder="Enter YouTube Link" name="srch">
+    	<button class="btn btn-default" type="submit">GO</button>
+    	</div>
+ -->	<div class="middle">
+    	<div class="wrapper col-md-offset-1">
+	      <input type="text" id="yt-link" value="Enter a YouTube URL"/>
+	      <button type="button" onclick="loadVideo()">GO</button>
+		</div>
+		</div>
+      
+    </div><!--/.navbar-collapse -->
+
+	  <div>
+
+		<div id="left">
+		  <div id="player"></div>
+		</div>
+	<!-- 		<div class="video-viewer">
+				<iframe width="560" height="315" id="video-frame" src="http://www.youtube.com/embed/ZoD6BH76EEU"></iframe> 
+			</div> -->
+		<div id="resize-handle"></div>
+		<div id="right">
+		  <div id="transcript"></div>
+		</div>
+	  </div>
   </div>
 </body>
 

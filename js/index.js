@@ -5,7 +5,7 @@ var windowWidth;
 
 function onYouTubeIframeAPIReady() {
 	console.log("ready");
-    player = new YT.Player('player', {
+    player = new YT.Player('player', { // TODO: Sometimes this doesn't work
         videoId: curVideoId,
         playerVars: {
             controls: 1,
@@ -52,7 +52,7 @@ function getTranscriptXML(ytId) {
 	var xhr = new XMLHttpRequest();
 	var async = false;
 	xhr.open("GET", "http://www.youtube.com/api/timedtext?lang=en&v=" + ytId, async);
-	xhr.send()
+	xhr.send();	// TODO: Make this async, and wrap everything else in xhr.onSuccess
 
 	// console.log(xhr);
 
@@ -91,7 +91,12 @@ function cleanTranscript(lines) {
 		cur.txt += (line + " ");
 
 		if (punctuation.indexOf(line.slice(-1)) != -1) {
-			clean.push(JSON.parse(JSON.stringify(cur)));
+			if (cur.txt.split(" ").length < 4) { // join short lines with previous line
+				clean[clean.length-1].txt += cur.txt;
+			}
+			else {
+				clean.push(JSON.parse(JSON.stringify(cur)));
+			}
 			cur.txt = ""; // Reset
 		}
 	}
@@ -124,20 +129,20 @@ function loadTranscript() {
 		cur.sta = start;
 		cur.txt = text;
 		lines.push(cur);
-
-		// var iDiv = document.createElement("span");
-		// iDiv.id = "caption" + i;
-		// iDiv.innerHTML = text + " ";
-
-		// transcriptDiv.appendChild(iDiv);
 	}	
 	var clean = cleanTranscript(lines);
 
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
+		iSpan.onclick = (function(j) {
+			return function() {
+				setVideoTime(clean[j].sta);
+			};
+		})(i);
+
 		// iSpan.setAttribute("data-time", clean[i].sta);
-		iSpan.setAttribute("onclick", "setVideoTime(" + clean[i].sta + ")");;
+		//iSpan.setAttribute("onclick", "setVideoTime(" + clean[i].sta + ")");;
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 	}

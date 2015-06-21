@@ -1,13 +1,47 @@
+.container {
+   padding-right: 0; /*15px in bootstrap.css*/
+   padding-left: 0;  /*idem*/
+   margin-right: 0;
+   margin-left: 0;
+   width: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto; 
+    width: /*whatever width you want*/;
+}
+
+#navbar {
+  background-color: black;
+  border-radius: 0px;
+}
+
 .wrapper {
     border:1px solid #000;
     display:inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-input,
+/*input,
 button {
     background-color:transparent;
     border:0;
-}
+}*/
 
 #transcript span {
   display: inline;
@@ -17,6 +51,8 @@ button {
   color: #333;
   font-family: Helvetica, Arial, sans-serif;
   width: 960px;
+  height: 100vh;
+  overflow: scroll; 
   /*margin: 10px auto;*/
 }
 
