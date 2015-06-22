@@ -5,8 +5,7 @@ var windowWidth;
 var ytLoaded = false;
 
 window.onYouTubeIframeAPIReady = function() {
-	console.log("ready");
-	console.log(YT.Player);
+	console.log("YouTube API Ready");
 
     player = new YT.Player('player', { // TODO: Sometimes this doesn't work
         videoId: curVideoId,
@@ -26,7 +25,7 @@ window.onYouTubeIframeAPIReady = function() {
     if (windowWidth) { // if document loaded first
     	resizePlayer();
     }
-}
+};
 
 function resizePlayer() {
 	$(document).ready(function() {
@@ -195,9 +194,10 @@ $(document).ready(function() {
 	loadTranscript();
 	resizePanels();
 	windowWidth = $(window).width();
+	setDefaultWidths();
+
 	if (ytLoaded) { // if YouTube API loaded first
 		resizePlayer(); 
 	}
-	setDefaultWidths();
 	// onYouTubeIframeAPIReady();
 });

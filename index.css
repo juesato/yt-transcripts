@@ -47,7 +47,10 @@ button {
 
 #transcript {
   padding: 19px;
-  /*overflow: scroll;*/
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  overflow: auto;
   /*position: absolute; */
 }
 
@@ -60,6 +63,7 @@ button {
   font-family: Helvetica, Arial, sans-serif;
   width: 960px;
   height: 100%;
+  overflow: hidden;
   /*margin: 10px auto;*/
 }
 
