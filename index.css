@@ -71,7 +71,7 @@ button {
   vertical-align:top;
   display: inline;
   background: #faa;
-  width: 40%;
+  width: 45%;
   float: left;
   height: 94vh;
 }
@@ -92,7 +92,7 @@ button {
   width: 22px;
   height: 94vh;
   position: absolute;
-  left:40%;
+  left:45%;
   cursor:e-resize;
 /*  top: 0;
   bottom: 0;*/

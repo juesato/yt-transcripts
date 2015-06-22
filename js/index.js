@@ -183,6 +183,13 @@ function resizePanels() {
 	});
 }
 
+function setDefaultWidths() {
+	console.log("setDefaultWidths");
+	var x1 = .5 * windowWidth - 22;
+	document.getElementById("left").style.width = x1.toString() + "px";
+	document.getElementById("resize-handle").style.left = x1.toString() + "px";
+	document.getElementById("right").style.width = (.5 * windowWidth).toString() + "px";
+}
 
 $(document).ready(function() {
 	loadTranscript();
@@ -191,5 +198,6 @@ $(document).ready(function() {
 	if (ytLoaded) { // if YouTube API loaded first
 		resizePlayer(); 
 	}
+	setDefaultWidths();
 	// onYouTubeIframeAPIReady();
 });
