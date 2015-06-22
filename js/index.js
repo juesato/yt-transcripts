@@ -2,9 +2,12 @@
 var curVideoId = 'lZ3bPUKo5zc';
 var player;
 var windowWidth;
+var ytLoaded = false;
 
-function onYouTubeIframeAPIReady() {
+window.onYouTubeIframeAPIReady = function() {
 	console.log("ready");
+	console.log(YT.Player);
+
     player = new YT.Player('player', { // TODO: Sometimes this doesn't work
         videoId: curVideoId,
         playerVars: {
@@ -16,13 +19,20 @@ function onYouTubeIframeAPIReady() {
             // modestbranding: 1,
             showinfo: 1
         }
-    });
+    });	
 
-    console.log("loadVid");
-    $(document).ready(function() {
+    ytLoaded = true;
+
+    if (windowWidth) { // if document loaded first
+    	resizePlayer();
+    }
+}
+
+function resizePlayer() {
+	$(document).ready(function() {
 		var playerWidth = .4 * windowWidth;
 		player.setSize(playerWidth, 9 * playerWidth / 16.0);
-    });
+	});
 }
 
 function loadVideo() {
@@ -178,5 +188,8 @@ $(document).ready(function() {
 	loadTranscript();
 	resizePanels();
 	windowWidth = $(window).width();
-	onYouTubeIframeAPIReady();
+	if (ytLoaded) { // if YouTube API loaded first
+		resizePlayer(); 
+	}
+	// onYouTubeIframeAPIReady();
 });

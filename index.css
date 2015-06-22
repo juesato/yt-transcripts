@@ -27,6 +27,7 @@ body {
 #navbar {
   background-color: black;
   border-radius: 0px;
+  margin-bottom: 0px;
 }
 
 .wrapper {
@@ -62,9 +63,13 @@ button {
 
 #left, #right {
   vertical-align:top;
-  display: inline-table;
+  display: inline;
   background: #faa;
   width: 40%;
+  float: left;
+}
+
+#right {
   overflow: scroll;
 }
 
@@ -72,14 +77,16 @@ button {
   margin-right: 22px;
 }
 
-
 #resize-handle {
-  display: block;
-  bottom:0;
+  /*display: block;*/
+  float: left;
+  vertical-align: top;
   background: #ddd;
   width: 22px;
+  height: 100%;
   position: absolute;
-  top:0;
   left:40%;
   cursor:e-resize;
+/*  top: 0;
+  bottom: 0;*/
 }
