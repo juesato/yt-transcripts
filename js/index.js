@@ -92,7 +92,6 @@ function cleanTranscript(lines) {
 		var line = lines[i].txt;
 		line = cleanLine(line);
 
-		// line = line.replace(/\s+/g, ''); // I don't believe trimming whitespace is necessary
 		if (cur.txt == "") {
 			cur.sta = lines[i].sta;
 		}
@@ -105,6 +104,7 @@ function cleanTranscript(lines) {
 			}
 			else {
 				clean.push(JSON.parse(JSON.stringify(cur)));
+				console.log(clean[clean.length-1].txtg);
 			}
 			cur.txt = ""; // Reset
 		}
@@ -139,6 +139,21 @@ function loadTranscript() {
 		cur.txt = text;
 		lines.push(cur);
 	}	
+
+	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
+	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+	var new_par = "<br><br>"
+	for (var i = 0; i < lines.length; i++) {
+		var tmp = lines[i].txt.split(':')[0];
+		if (speakerNames.indexOf(tmp) != -1) {
+			// console.log("EQUALLL");
+			lines[i].txt = new_par + lines[i].txt;  
+			console.log(lines[i].txt);
+		}
+	}
+
+	console.log(speakerNames);
+
 	var clean = cleanTranscript(lines);
 
 	for (var i = 0; i < clean.length; i++) {
@@ -155,6 +170,30 @@ function loadTranscript() {
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 	}
+}
+
+function getSpeakerNames(lines) {
+	var cnts = {};
+	var names = [];
+	var i, line;
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].txt;
+		if (line.indexOf(':') != -1) {
+			var speaker = line.split(':')[0];
+			if (speaker in cnts) {
+				cnts[speaker]++;
+			}
+			else {
+				cnts[speaker] = 1;
+			}
+		}
+	}
+	for (key in cnts) {
+		if (cnts[key] >= 3) { // arbitrary const
+			names.push(key);
+		}
+	}
+	return names;
 }
 
 function resizePanels() {
