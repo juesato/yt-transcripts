@@ -44,6 +44,12 @@ button {
     border:0;
 }*/
 
+#transcript {
+  padding: 19px;
+  overflow: scroll; 
+  height: 100vh;
+}
+
 #transcript span {
   display: inline;
   /*padding: 4px 2px;*/
@@ -52,8 +58,6 @@ button {
   color: #333;
   font-family: Helvetica, Arial, sans-serif;
   width: 960px;
-  height: 100vh;
-  overflow: scroll; 
   /*margin: 10px auto;*/
 }
 
@@ -89,4 +93,8 @@ button {
   cursor:e-resize;
 /*  top: 0;
   bottom: 0;*/
+}
+
+.boxed {
+  border: 1px solid green ;
 }
