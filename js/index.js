@@ -188,7 +188,7 @@ function setDefaultWidths() {
 	var x1 = .5 * windowWidth - 22;
 	document.getElementById("left").style.width = x1.toString() + "px";
 	document.getElementById("resize-handle").style.left = x1.toString() + "px";
-	document.getElementById("right").style.width = (.5 * windowWidth).toString() + "px";
+	document.getElementById("right").style.width = (.5 * windowWidth - 2).toString() + "px";
 }
 
 $(document).ready(function() {
