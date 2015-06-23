@@ -87,7 +87,7 @@ function cleanTranscript(lines) {
 	var clean = [];
 	var cur = {};
 	var curSentenceLen = 0, curdur = 0;
-	var PAR_THRESHOLD = 80;
+	var PAR_THRESHOLD = 250; // TODO: this should vary with the speaker's speaking speed
 
 	cur.txt = "";
 
@@ -107,7 +107,7 @@ function cleanTranscript(lines) {
 			var endPar = false;
 			var curWordLen = cur.txt.split(" ").length;
 			// if words_per_second^1.5 * curlen > threshold, start a new paragraph
-			var score = Math.pow(curWordLen, .2)/ Math.pow(curdur, 1.3) * Math.pow(curSentenceLen, 2);
+			var score = 1 / Math.pow(curWordLen, .2) * Math.pow(curdur, 1.3) * Math.pow(curSentenceLen, 2);
 			if (score > PAR_THRESHOLD) {
 				endPar = true;
 				curSentenceLen = 0;
@@ -259,9 +259,16 @@ $(document).ready(function() {
 	resizePanels();
 	windowWidth = $(window).width();
 	setDefaultWidths();
+    // $('body').layout({ applyDefaultStyles: true });
+
 
 	if (ytLoaded) { // if YouTube API loaded first
 		resizePlayer(); 
 	}
 	// onYouTubeIframeAPIReady();
 });
+
+ var tag = document.createElement('script');
+ tag.src = "https://www.youtube.com/iframe_api";
+ var firstScriptTag = document.getElementsByTagName('script')[0];
+ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);

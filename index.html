@@ -2,45 +2,38 @@
 <head>
 	<title> Interactive Transcript Viewer </title> 
 	<!-- TODO: make this this YouViewer - Video Title -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- TODO: Add favicon -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="index.css">
-<meta name="viewport" content="initial-scale=1">
 
-	<script src="https://www.youtube.com/iframe_api"></script>	
 	<script src="js/jquery-1.11.3.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
-
-	<script src="js/index.js"></script>
+	<meta name="viewport" content="initial-scale=1">
 </head>
 <body>
   <div class="container">
-<!--   <nav>
-  	<ul>
-		<div class="wrapper">
-	    <input type="text" id="yt-link" value="Enter a YouTube URL"/>
-	    <button type="button" onclick="loadVideo()">GO</button>
-		</div>
-	</ul>
-  </nav> -->
+    <div id="navbar" class="navbar">
+			<div class="middle">
+	    	<div class="wrapper col-md-offset-1">
+		      <input type="text" id="yt-link" value="Enter a YouTube URL"/>
+		      <button type="button" onclick="loadVideo()">GO</button>
+				</div>
+			</div>
+    </div>
 
-      <div id="navbar" class="navbar">
-		<div class="middle">
-    	<div class="wrapper col-md-offset-1">
-	      <input type="text" id="yt-link" value="Enter a YouTube URL"/>
-	      <button type="button" onclick="loadVideo()">GO</button>
-		</div>
-		</div>
-      </div><!--/.navbar-collapse -->
+    <div id="main">
+    	<div id="left" class="ui-layout-center">
+    		<div id="player"></div>
+    	</div>
+    	<div id="resize-handle"></div>
+    	<div id="right" class="boxed ui-layout-east">
+    		<div id="transcript"></div>
+    	</div>
+    </div>
 
-	  <div>
-		<div id="left">
-		  <div id="player"></div>
-		</div>
-		<div id="resize-handle"></div>
-		<div id="right" class="boxed">
-		  <div id="transcript"></div>
-		</div>
-	  </div>
   </div>
+  <script src="js/index.js"></script> 
+  <!-- script must be loaded after player div -->
+
 </body>
 
