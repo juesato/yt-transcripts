@@ -65,6 +65,8 @@ function resizePlayer() {
 }
 
 function loadVideo() {
+	console.log("loadVideo");
+
 	var ytUrl = document.getElementById("yt-link").value;
 	var ytId = getYoutubeId(ytUrl);
 	var embedStr = 'http://www.youtube.com/embed/' + ytId;
@@ -73,6 +75,7 @@ function loadVideo() {
 	player.loadVideoById(ytId);
 
 	loadTranscript();
+	setVideoTitle();
 	// document.getElementById("video-frame").src = embedStr;
 }
 
@@ -93,9 +96,12 @@ function getTranscriptXML(ytId) {
 	xhr.open("GET", "http://www.youtube.com/api/timedtext?lang=en&v=" + ytId, async);
 	xhr.send();	// TODO: Make this async, and wrap everything else in xhr.onSuccess
 
-	// console.log(xhr);
+	console.log(xhr);
 
 	// TODO: Catch errors if manual transcript is unavailable
+	if (!xhr.responseXML) {
+		return -1;
+	}
 	return xhr.responseXML.firstChild;
 }
 
@@ -177,6 +183,13 @@ function loadTranscript() {
 
 	var transcriptDiv = document.getElementById("transcript");
 	transcriptDiv.innerHTML = "";
+
+	if (xml == -1) { // No transcript available
+		var iSpan = document.createElement("span");		
+		iSpan.innerHTML = "Sorry, no manual transcript is available";
+		transcriptDiv.appendChild(iSpan);
+		return;
+	}
 
 	var nodes = xml.getElementsByTagName("text");
 	
