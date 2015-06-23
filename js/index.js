@@ -78,7 +78,6 @@ function cleanLine(line) {
 	clean = clean.replace(/&#37;/g, "%");
 	clean = clean.replace(/&#39;/g, "'");
 
-	// console.log(clean);
 	return clean;
 }
 
@@ -87,7 +86,11 @@ var punctuation = ['.', '?', '!'];
 function cleanTranscript(lines) {
 	var clean = [];
 	var cur = {};
+	var curSentenceLen = 0, curdur = 0;
+	var PAR_THRESHOLD = 80;
+
 	cur.txt = "";
+
 	for (var i = 0; i < lines.length; i++) {
 		var line = lines[i].txt;
 		line = cleanLine(line);
@@ -97,16 +100,39 @@ function cleanTranscript(lines) {
 		}
 
 		cur.txt += (line + " ");
+		curSentenceLen++;
+		curdur += lines[i].dur;
 
 		if (punctuation.indexOf(line.slice(-1)) != -1) {
-			if (cur.txt.split(" ").length < 4) { // join short lines with previous line
-				clean[clean.length-1].txt += cur.txt;
+			var endPar = false;
+			var curWordLen = cur.txt.split(" ").length;
+			// if words_per_second^1.5 * curlen > threshold, start a new paragraph
+			var score = Math.pow(curWordLen, .2)/ Math.pow(curdur, 1.3) * Math.pow(curSentenceLen, 2);
+			if (score > PAR_THRESHOLD) {
+				endPar = true;
+				curSentenceLen = 0;
+			}
+
+			if (endPar) {
+				cur.txt += "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
+			}
+
+			if (curWordLen < 4) { // join short lines with previous line
+				var tmp = clean[clean.length-1].txt.split('<br><br>&nbsp;'); // get section before new line
+				if (tmp.length > 1) {
+					console.log(tmp);
+					// console.log(tmp + cur.txt + "<br>");
+					clean[clean.length-1].txt = tmp[0] + cur.txt + "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;"
+				}
+				else {
+					clean[clean.length-1].txt = tmp + cur.txt;
+				}				
 			}
 			else {
 				clean.push(JSON.parse(JSON.stringify(cur)));
-				console.log(clean[clean.length-1].txtg);
 			}
 			cur.txt = ""; // Reset
+			curdur = 0;
 		}
 	}
 
@@ -128,7 +154,7 @@ function loadTranscript() {
 	
 	var lines = [];
 	for (var i = 0; i < nodes.length; i++) {
-		var dur = nodes[i].getAttribute("dur");
+		var dur = parseFloat(nodes[i].getAttribute("dur"));
 		var start = nodes[i].getAttribute("start");
 		var text = nodes[i].innerHTML;
 		// console.log(dur + " " + start + " " + text);
@@ -142,17 +168,16 @@ function loadTranscript() {
 
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
-	var new_par = "<br><br>"
+	var new_par = "<br><br>";
 	for (var i = 0; i < lines.length; i++) {
 		var tmp = lines[i].txt.split(':')[0];
 		if (speakerNames.indexOf(tmp) != -1) {
-			// console.log("EQUALLL");
 			lines[i].txt = new_par + lines[i].txt;  
-			console.log(lines[i].txt);
+			// console.log(lines[i].txt);
 		}
 	}
 
-	console.log(speakerNames);
+	// console.log(speakerNames);
 
 	var clean = cleanTranscript(lines);
 
