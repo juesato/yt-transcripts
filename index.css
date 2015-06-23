@@ -32,19 +32,36 @@ body {
   height: 5vh;
 }
 
-.wrapper {
-    border:1px solid #000;
-    display:inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+#video-title {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-family: Roboto, arial, sans-serif;
+  font-size: 30px;
 }
 
-/*input,
+.wrapper {
+    width: 50%;
+    border:1px solid #000;
+    display:inline-block;
+    margin-bottom: 10px;
+}
+
+#yt-link {
+  width: 75%;
+}
+
+input,
 button {
-    background-color:transparent;
     border:0;
-}*/
+}
+
+input {
+  padding-left: 3px;
+}
+
+.wrapper button {
+  float: right;
+}
 
 #transcript {
   padding: 19px;
@@ -74,7 +91,6 @@ button {
 #left, #right {
   vertical-align:top;
   display: inline;
-  background: #faa;
   float: left;
 }
 
@@ -87,8 +103,24 @@ button {
   margin-right: 12px;
   padding-left: 0px;
   padding-right: 0px;
+  /*background: #faa;*/
+}
+
+#instructions{
+  margin-top: 30px;
+}
+
+#instructions p {
+  margin-top:5px;
+  margin-bottom: 5px;
+  font-family: Roboto, arial, sans-serif;
+  font-size: 18px;
+}
+
+#main {
+  margin-top: 40px;
 }
 
 .boxed {
-  border: 1px solid green ;
+  border: 1px solid gray;
 }

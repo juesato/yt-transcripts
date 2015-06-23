@@ -3,36 +3,40 @@
 	<title> Interactive Transcript Viewer </title> 
 	<!-- TODO: make this this YouViewer - Video Title -->
 	<!-- TODO: Add favicon -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap-nonresp.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="index.css">
 
 	<script src="js/jquery-1.11.3.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapsi.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 	<!-- <meta name="viewport" content="initial-scale=1"> -->
 </head>
 <body>
-  <div class="container">
-    <div id="navbar" class="navbar">
-			<div class="middle">
-	    	<div class="wrapper col-md-offset-1">
-		      <input type="text" id="yt-link" value="Enter a YouTube URL"/>
-		      <button type="button" onclick="loadVideo()">GO</button>
+	<div class="container">
+
+
+		<div id="main">
+			<div id="left" class="col-xs-6 col-md-offset-1">
+				<div class="wrapper">
+					<input type="text" id="yt-link" value="Enter a YouTube URL"/>
+					<button type="button" onclick="loadVideo()">GO</button>
+				</div>
+				<div id="video-title"></div>
+				<div id="player"></div>
+				<div id="instructions">
+					<p>1. Load a video.</p>
+					<p>2. Easily locate relevant sections in the transcript.</p>
+					<p>3. Click on the transcript to jump to the corresponding time.</p>
 				</div>
 			</div>
-    </div>
 
-    <div id="main">
-    	<div id="left" class="col-xs-6 col-md-offset-1">
-    		<div id="player"></div>
-    	</div>
-    	<div id="right" class="boxed col-xs-4 ">
-    		<div id="transcript"></div>
-    	</div>
-    </div>
+			<div id="right" class="boxed col-xs-4 ">
+				<div id="transcript"></div>
+			</div>
+		</div>
 
-  </div>
-  <script src="js/index.js"></script> 
-  <!-- script must be loaded after player div -->
+	</div>
+	<script src="js/index.js"></script> 
+	<!-- script must be loaded after player div -->
 
 </body>
 

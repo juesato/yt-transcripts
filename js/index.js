@@ -1,22 +1,23 @@
-// var curVideoId = 'k6U-i4gXkLM';
-var curVideoId = 'lZ3bPUKo5zc';
+var curVideoId = 'Ei8CFin00PY';
+// var curVideoId = 'lZ3bPUKo5zc';
 var player;
-var windowWidth;
+var domWindow, windowWidth;
 var ytLoaded = false;
+var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 window.onYouTubeIframeAPIReady = function() {
 	console.log("YouTube API Ready");
 
-    player = new YT.Player('player', { // TODO: Sometimes this doesn't work
+    player = new YT.Player('player', {
         videoId: curVideoId,
         playerVars: {
             controls: 1,
             autoplay: 0,
             disablekb: 1,
             enablejsapi: 1,
-            iv_load_policy: 3,
+            // iv_load_policy: 3,
             // modestbranding: 1,
-            showinfo: 1
+            // showinfo: 1
         }
     });	
 
@@ -24,22 +25,42 @@ window.onYouTubeIframeAPIReady = function() {
 
     if (windowWidth) { // if document loaded first
     	resizePlayer();
+    	setVideoTitle();
     }
 };
 
+function getVideoTitle(ytId) {
+	var xhr = new XMLHttpRequest();
+	var async = false;
+	xhr.open("GET", "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" 
+		+ ytId + "&key=" + API_KEY, async);
+	xhr.send();	// TODO: Make this async, and wrap everything else in xhr.onSuccess
+
+	var data = JSON.parse(xhr.response);
+
+	return data.items[0].snippet.title;
+}
+
+function setVideoTitle() {
+	var title = getVideoTitle(curVideoId);
+	console.log(title);
+	var domTitle = document.getElementById("video-title");
+	console.log(domTitle);
+	domTitle.innerHTML = title;
+	document.title = title + " - YouReader";
+}
+
 function resizePlayer() {
 	$(document).ready(function() {
-		console.log("resizePlayer");
-		var playerWidth = 5.8 * windowWidth / 12;
+		windowWidth = domWindow.width();
+		// console.log("resizePlayer");
+		var playerWidth = 5.5 * windowWidth / 12;
 		var playerHeight = 3 * playerWidth / 4.0;
-		console.log(playerWidth);
+
 		var nodePlayer = $("player");
 		nodePlayer.width(playerWidth);
-		nodePlayer.height(playerHeight);
 
 		player.setSize(playerWidth, playerHeight);
-		console.log(nodePlayer);
-
 	});
 }
 
@@ -197,8 +218,6 @@ function loadTranscript() {
 			};
 		})(i);
 
-		// iSpan.setAttribute("data-time", clean[i].sta);
-		//iSpan.setAttribute("onclick", "setVideoTime(" + clean[i].sta + ")");;
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 	}
@@ -245,9 +264,6 @@ function resizePanels() {
 			$("#left").width(lWidth);
 			$("#right").width(origRightWidth - (ui.position.left - ui.originalPosition.left));
 		},
-		// stop: function(event, ui) {
-
-		// },
 		containment: "parent"
 		
 	});
@@ -263,19 +279,25 @@ function setDefaultWidths() {
 
 $(document).ready(function() {
 	loadTranscript();
-	resizePanels();
-	windowWidth = $(window).width();
-	setDefaultWidths();
+	domWindow = $(window);
+	windowWidth = domWindow.width();
     // $('body').layout({ applyDefaultStyles: true });
 
 
 	if (ytLoaded) { // if YouTube API loaded first
 		resizePlayer(); 
+		setVideoTitle();
 	}
-	// onYouTubeIframeAPIReady();
 });
 
- var tag = document.createElement('script');
- tag.src = "https://www.youtube.com/iframe_api";
- var firstScriptTag = document.getElementsByTagName('script')[0];
- firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var resizeId;
+window.onresize = function() {
+ 	clearTimeout(resizeId);
+ 	resizeId = setTimeout(resizePlayer(), 100);
+}
