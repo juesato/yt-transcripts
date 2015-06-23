@@ -3,7 +3,8 @@
    padding-left: 0;  /*idem*/
    margin-right: 0;
    margin-left: 0;
-   width: 100%;
+   max-width: none !important;
+   width: 100% !important;
 }
 
 body {
@@ -25,9 +26,9 @@ body {
 }
 
 #navbar {
-  background-color: black;
-  border-radius: 0px;
-  margin-bottom: 0px;
+  /*background-color: black;*/
+  border-bottom: thin solid red;
+  margin-bottom: 10px;
   height: 5vh;
 }
 
@@ -74,31 +75,18 @@ button {
   vertical-align:top;
   display: inline;
   background: #faa;
-  width: 45%;
   float: left;
-  height: 94vh;
 }
 
 #right {
+  height: 92vh;
   overflow-y: scroll;
 }
 
 #left {
-  margin-right: 22px;
-}
-
-#resize-handle {
-  /*display: block;*/
-  float: left;
-  vertical-align: top;
-  background: #ddd;
-  width: 22px;
-  height: 94vh;
-  position: absolute;
-  left:45%;
-  cursor:e-resize;
-/*  top: 0;
-  bottom: 0;*/
+  margin-right: 12px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .boxed {

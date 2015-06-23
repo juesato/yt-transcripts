@@ -29,8 +29,17 @@ window.onYouTubeIframeAPIReady = function() {
 
 function resizePlayer() {
 	$(document).ready(function() {
-		var playerWidth = .4 * windowWidth;
-		player.setSize(playerWidth, 9 * playerWidth / 16.0);
+		console.log("resizePlayer");
+		var playerWidth = 5.8 * windowWidth / 12;
+		var playerHeight = 3 * playerWidth / 4.0;
+		console.log(playerWidth);
+		var nodePlayer = $("player");
+		nodePlayer.width(playerWidth);
+		nodePlayer.height(playerHeight);
+
+		player.setSize(playerWidth, playerHeight);
+		console.log(nodePlayer);
+
 	});
 }
 
@@ -120,8 +129,6 @@ function cleanTranscript(lines) {
 			if (curWordLen < 4) { // join short lines with previous line
 				var tmp = clean[clean.length-1].txt.split('<br><br>&nbsp;'); // get section before new line
 				if (tmp.length > 1) {
-					console.log(tmp);
-					// console.log(tmp + cur.txt + "<br>");
 					clean[clean.length-1].txt = tmp[0] + cur.txt + "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;"
 				}
 				else {
@@ -250,7 +257,7 @@ function setDefaultWidths() {
 	console.log("setDefaultWidths");
 	var x1 = .5 * windowWidth - 22;
 	document.getElementById("left").style.width = x1.toString() + "px";
-	document.getElementById("resize-handle").style.left = x1.toString() + "px";
+	// document.getElementById("resize-handle").style.left = x1.toString() + "px";
 	document.getElementById("right").style.width = (.5 * windowWidth - 2).toString() + "px";
 }
 
