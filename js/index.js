@@ -47,7 +47,7 @@ function setVideoTitle() {
 	var domTitle = document.getElementById("video-title");
 	console.log(domTitle);
 	domTitle.innerHTML = title;
-	document.title = title + " - YouReader";
+	document.title = "YouReader - " + title;
 }
 
 function resizePlayer() {
