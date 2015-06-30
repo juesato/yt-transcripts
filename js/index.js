@@ -5,6 +5,9 @@ var domWindow, windowWidth;
 var ytLoaded = false;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
+var curCaptions = [];
+var curCaptionTimes = [];
+
 window.onYouTubeIframeAPIReady = function() {
 	console.log("YouTube API Ready");
 
@@ -222,6 +225,9 @@ function loadTranscript() {
 
 	var clean = cleanTranscript(lines);
 
+	curCaptionTimes.length = 0;
+	curCaptions.length = 0;
+
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
@@ -233,7 +239,43 @@ function loadTranscript() {
 
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
+
+		curCaptions.push(clean[i]);
+		curCaptionTimes.push(clean[i].sta);
 	}
+}
+
+function lower_bound(searchElement, arr) { 
+    var minIndex = 0;
+    var maxIndex = arr.length - 1;
+    var currentIndex;
+    var currentElement;
+ 
+    while (minIndex <= maxIndex) {
+        currentIndex = (minIndex + maxIndex) / 2 | 0;
+        currentElement = arr[currentIndex];
+ 
+        if (currentElement < searchElement) {
+            minIndex = currentIndex + 1;
+        }
+        else if (currentElement > searchElement) {
+            maxIndex = currentIndex - 1;
+        }
+        else {
+        	if (currentIndex == maxIndex) {
+        		return currentIndex;
+        	}
+        	while (currentIndex < maxIndex &&
+        		arr[currentIndex+1] == arr[currentIndex]) currentIndex++;
+            return currentIndex;
+        }
+    }
+ 
+    return currentIndex;
+}
+
+function getCaptionFromTime(time) {
+	return lower_bound(time, curCaptionTimes);
 }
 
 function getSpeakerNames(lines) {
@@ -301,6 +343,11 @@ $(document).ready(function() {
 		resizePlayer(); 
 		setVideoTitle();
 	}
+
+	window.setInterval( function(){
+  		var time = player.getCurrentTime();
+  		console.log("Time is " + time);
+	}, 1000);
 });
 
 

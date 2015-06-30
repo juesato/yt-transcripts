@@ -60,7 +60,9 @@ body {
   padding-left: 8px;
   font-size: 20px;
   color: #cccbcb;
-  border: 1px solid #bfbebe;
+  /*border: 1px solid #bfbebe;*/
+  outline:  1px solid #bfbebe;
+  border: none;
   margin-right: -1px;
 
 }
@@ -79,8 +81,9 @@ body {
     width: 10%;
     font-size: 14px;
     background-color: #e3e2e2;
-    border: 1px solid #bfbebe;
+    outline: 1px solid #bfbebe;
     border-left: none;
+    border: none;
 }
 
 .wrapper button:hover {
