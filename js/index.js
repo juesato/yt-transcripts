@@ -1,13 +1,13 @@
 var curVideoId = 'Ei8CFin00PY';
 // var curVideoId = 'lZ3bPUKo5zc';
 var player;
-var domWindow, windowWidth;
+var domWindow, windowWidth, windowHeight;
 var ytLoaded = false;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
 
-var curCaptions = [];
+var curCaptionDivs = [];
 var curCaptionTimes = [];
 var focusedLine = -1;
 
@@ -49,9 +49,7 @@ function getVideoTitle(ytId) {
 
 function setVideoTitle() {
 	var title = getVideoTitle(curVideoId);
-	console.log(title);
 	var domTitle = document.getElementById("video-title");
-	console.log(domTitle);
 	domTitle.innerHTML = title;
 	document.title = "YouReader - " + title;
 }
@@ -209,7 +207,6 @@ function loadTranscript() {
 		var dur = parseFloat(nodes[i].getAttribute("dur"));
 		var start = nodes[i].getAttribute("start");
 		var text = nodes[i].innerHTML;
-		// console.log(dur + " " + start + " " + text);
 
 		var cur = {};
 		cur.dur = dur;
@@ -225,17 +222,14 @@ function loadTranscript() {
 		var tmp = lines[i].txt.split(':')[0];
 		if (speakerNames.indexOf(tmp) != -1) {
 			lines[i].beginPar = true;
-			console.log("SPEAKR");
-			// console.log(lines[i].txt);
 		}
 	}
 
-	// console.log(speakerNames);
 
 	var clean = cleanTranscript(lines);
 
 	curCaptionTimes.length = 0;
-	curCaptions.length = 0;
+	curCaptionDivs.length = 0;
 
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
@@ -253,7 +247,6 @@ function loadTranscript() {
 		transcriptDiv.appendChild(iSpan);
 
 		if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
-			console.log(clean[i].endPar + " " + clean[i+1].beginPar);
 			var parBreak = document.createElement("span");
 			parBreak.class = "parBreak";
 			parBreak.id = "parBreak" + i;
@@ -261,47 +254,39 @@ function loadTranscript() {
 			transcriptDiv.appendChild(parBreak);
 		}
 
-		// curCaptions.push(clean[i]);
+		curCaptionDivs.push(iSpan);
 		curCaptionTimes.push(clean[i].sta);
 
 	}
 }
 
-function lower_bound(searchElement, arr) { 
-    var minIndex = 0;
-    var maxIndex = arr.length - 1;
-    var currentIndex;
-    var currentElement;
- 
-    while (minIndex <= maxIndex) {
-        currentIndex = (minIndex + maxIndex) / 2 | 0;
-        currentElement = arr[currentIndex];
- 
-        if (currentElement < searchElement) {
-            minIndex = currentIndex + 1;
-        }
-        else if (currentElement > searchElement) {
-            maxIndex = currentIndex - 1;
-        }
-        else {
-        	if (currentIndex == maxIndex) {
-        		return currentIndex;
-        	}
-        	while (currentIndex < maxIndex &&
-        		arr[currentIndex+1] == arr[currentIndex]) currentIndex++;
-            return currentIndex;
-        }
+function upper_bound(val, arr, first, last) {
+    if (arguments.length == 2) {
+    	return upper_bound(val, arr, 0, arr.length);
     }
- 
-    return currentIndex;
+    if (last - first <= 2) {
+    	while (first < arr.length-1 && arr[first+1] <= val) first++;
+    	return first;
+    }
+
+    var idx = Math.floor((first+last)/2);
+    if (arr[idx] > val) return upper_bound(val, arr, first, idx-1);
+    else return upper_bound(val, arr, idx, last);
 }
 
 function getCaptionFromTime(time) {
-	return lower_bound(time, curCaptionTimes);
+	return upper_bound(time, curCaptionTimes);
 }
 
 function focusCaption(newLine) {
+	if (focusedLine != -1) curCaptionDivs[focusedLine].style.color = "black";
+	focusedLine = newLine;
+	curCaptionDivs[focusedLine].style.color = "red";
+	scrollToCaption(focusedLine);
+}
 
+function scrollToCaption(caption) {
+	$("#right").scrollTop(curCaptionDivs[caption].offsetTop - .2 * windowHeight);
 }
 
 function getSpeakerNames(lines) {
@@ -362,6 +347,7 @@ $(document).ready(function() {
 	loadTranscript();
 	domWindow = $(window);
 	windowWidth = domWindow.width();
+	windowHeight = domWindow.height();
     // $('body').layout({ applyDefaultStyles: true });
 
 
@@ -372,8 +358,9 @@ $(document).ready(function() {
 
 	window.setInterval( function(){
   		var time = player.getCurrentTime();
-  		console.log("Time is " + time);
-	}, 1000);
+  		var curCapt = getCaptionFromTime(time);
+  		focusCaption(curCapt);
+	}, 100);
 });
 
 

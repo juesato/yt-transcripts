@@ -113,13 +113,6 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   /*overflow: hidden;*/
   /*margin: 10px auto;*/
-
-    -o-transition:.5s;
-  -ms-transition:.5s;
-  -moz-transition:.5s;
-  -webkit-transition:.5s;
-  /* ...and now for the proper property */
-  transition:.5s;
 }
 
 #transcript span:hover {
