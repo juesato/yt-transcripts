@@ -5,8 +5,11 @@ var domWindow, windowWidth;
 var ytLoaded = false;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
+var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
+
 var curCaptions = [];
 var curCaptionTimes = [];
+var focusedLine = -1;
 
 window.onYouTubeIframeAPIReady = function() {
 	console.log("YouTube API Ready");
@@ -109,7 +112,7 @@ function getTranscriptXML(ytId) {
 }
 
 function cleanLine(line) {
-	var clean = line;
+	var clean = line.trim();
 	clean = clean.replace(/&amp;/g, "&");
 	clean = clean.replace(/&lt;/g, "<");
 	clean = clean.replace(/&gt;/g, ">");
@@ -142,6 +145,9 @@ function cleanTranscript(lines) {
 		curSentenceLen++;
 		curdur += lines[i].dur;
 
+		cur.beginPar = lines[i].beginPar;
+		cur.endPar = lines[i].endPar;
+
 		if (punctuation.indexOf(line.slice(-1)) != -1) {
 			var endPar = false;
 			var curWordLen = cur.txt.split(" ").length;
@@ -153,19 +159,21 @@ function cleanTranscript(lines) {
 			}
 
 			if (endPar) {
-				cur.txt += "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
+				// cur.txt += "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
+				cur.endPar = true;
 			}
 
 			if (curWordLen < 4) { // join short lines with previous line
-				var tmp = clean[clean.length-1].txt.split('<br><br>&nbsp;'); // get section before new line
+				var tmp = clean[clean.length-1].txt.split(NEW_PAR_STR); // get section before new line
 				if (tmp.length > 1) {
-					clean[clean.length-1].txt = tmp[0] + cur.txt + "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;"
+					clean[clean.length-1].txt = tmp[0] + cur.txt + NEW_PAR_STR;
 				}
 				else {
 					clean[clean.length-1].txt = tmp + cur.txt;
 				}				
 			}
-			else {
+			else { // add on new line
+				// console.log(cur);
 				clean.push(JSON.parse(JSON.stringify(cur)));
 			}
 			cur.txt = ""; // Reset
@@ -212,11 +220,12 @@ function loadTranscript() {
 
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
-	var new_par = "<br><br>";
+
 	for (var i = 0; i < lines.length; i++) {
 		var tmp = lines[i].txt.split(':')[0];
 		if (speakerNames.indexOf(tmp) != -1) {
-			lines[i].txt = new_par + lines[i].txt;  
+			lines[i].beginPar = true;
+			console.log("SPEAKR");
 			// console.log(lines[i].txt);
 		}
 	}
@@ -231,17 +240,30 @@ function loadTranscript() {
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
+		iSpan.class = "caption";
 		iSpan.onclick = (function(j) {
 			return function() {
 				setVideoTime(clean[j].sta);
 			};
 		})(i);
 
+		// var caption = clean[i].txt.split(NEW_PAR_STR);
+		// iSpan.innerHTML = caption[0];
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 
-		curCaptions.push(clean[i]);
+		if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
+			console.log(clean[i].endPar + " " + clean[i+1].beginPar);
+			var parBreak = document.createElement("span");
+			parBreak.class = "parBreak";
+			parBreak.id = "parBreak" + i;
+			parBreak.innerHTML = NEW_PAR_STR;
+			transcriptDiv.appendChild(parBreak);
+		}
+
+		// curCaptions.push(clean[i]);
 		curCaptionTimes.push(clean[i].sta);
+
 	}
 }
 
@@ -276,6 +298,10 @@ function lower_bound(searchElement, arr) {
 
 function getCaptionFromTime(time) {
 	return lower_bound(time, curCaptionTimes);
+}
+
+function focusCaption(newLine) {
+
 }
 
 function getSpeakerNames(lines) {

@@ -53,23 +53,6 @@ body {
   width: 90%;
 }
 
-.wrapper input {
-  width: 90%;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 8px;
-  font-size: 20px;
-  color: #cccbcb;
-  /*border: 1px solid #bfbebe;*/
-  outline:  1px solid #bfbebe;
-  border: none;
-  margin-right: -1px;
-
-}
-
-.wrapper input:hover {
-  border: 1px solid #c0c0c0;
-}
 
 .wrapper button {
     /*margin-left: -1px;*/
@@ -90,6 +73,27 @@ body {
     background-color: #cccbcb;
 }
 
+.wrapper input {
+  width: 90%;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  font-size: 20px;
+  font-weight: 100;
+  color: #cccbcb;
+  /*border: 1px solid #bfbebe;*/
+  outline:  1px solid #bfbebe;
+  border: none;
+  margin-right: -1px;
+
+}
+
+.wrapper input:hover {
+  outline: 1px solid green;
+  /*#c0c0c0;*/
+}
+
+
 #transcript {
   padding: 19px;
   box-sizing: border-box;
@@ -109,10 +113,19 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   /*overflow: hidden;*/
   /*margin: 10px auto;*/
+
+    -o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  /* ...and now for the proper property */
+  transition:.5s;
 }
 
 #transcript span:hover {
-	color: red;
+	/*color: red;*/
+  /*font-weight: bold;*/
+  text-decoration: underline;
 }
 
 #left, #right {
