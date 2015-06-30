@@ -10,6 +10,8 @@ var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
 var curCaptionDivs = [];
 var curCaptionTimes = [];
 var focusedLine = -1;
+var maintainPosition = true;
+var autoscrolling = false;
 
 window.onYouTubeIframeAPIReady = function() {
 	console.log("YouTube API Ready");
@@ -282,7 +284,11 @@ function focusCaption(newLine) {
 	if (focusedLine != -1) curCaptionDivs[focusedLine].style.color = "black";
 	focusedLine = newLine;
 	curCaptionDivs[focusedLine].style.color = "red";
-	scrollToCaption(focusedLine);
+	if (maintainPosition) {
+		autoscrolling = true;
+		scrollToCaption(focusedLine);
+		autoscrolling = false;
+	}
 }
 
 function scrollToCaption(caption) {
@@ -363,6 +369,12 @@ $(document).ready(function() {
 	}, 100);
 });
 
+$("#right").scroll(function() {
+	if (!autoscrolling) {
+		maintainPosition = false;
+		console.log("detected scrolling");
+	}
+});
 
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -374,3 +386,10 @@ window.onresize = function() {
  	clearTimeout(resizeId);
  	resizeId = setTimeout(resizePlayer(), 100);
 }
+
+document.onkeypress = function (e) {
+    e = e || window.event;
+    if (e.keyCode == 82 || e.keyCode == 114) { // 'r' 'R'
+    	maintainPosition = true;
+    }
+};
