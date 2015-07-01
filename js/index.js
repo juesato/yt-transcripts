@@ -287,7 +287,6 @@ function focusCaption(newLine) {
 	if (maintainPosition) {
 		autoscrolling = true;
 		scrollToCaption(focusedLine);
-		autoscrolling = false;
 	}
 }
 
@@ -374,6 +373,7 @@ $("#right").scroll(function() {
 		maintainPosition = false;
 		console.log("detected scrolling");
 	}
+	autoscrolling = false;
 });
 
 var tag = document.createElement('script');
