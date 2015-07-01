@@ -15,10 +15,14 @@
 
     <div id="navbar">
 
-      <div class="wrapper col-md-offset-1" id="searchform">
+      <div class="wrapper col-xs-5 col-xs-offset-1" id="searchform">
           <input type="text" id="yt-link" placeholder="Enter a YouTube URL"  onfocus="if(this.placeholder=='Enter a YouTube URL')this.placeholder='';" onblur="if(this.placeholder=='')this.placeholder='Enter a YouTube URL';"/>
           <button type="button" onclick="loadVideo()">Go!</button>
       </div>
+      <div class="col-xs-5 no-padding constrain" id="navright">
+        <img id="help" src="help_icon.gif" alt="How do I use this?">
+      </div>
+
     </div>
 <!--       <form class="navbar-form navbar-left" role="search">
         <div class="form-group" id="searchform">

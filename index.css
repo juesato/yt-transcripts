@@ -7,6 +7,15 @@
    width: 100% !important;
 }
 
+.no-padding {
+  padding: 0px;
+}
+
+.constrain {
+  max-height: 100%;
+  max-width: 100%;
+}
+
 body {
   width: 100%;
   height: 100vh;
@@ -29,30 +38,34 @@ body {
   /*background-color: black;*/
   /*border-bottom: thin solid red;*/
   background-color: #f0f0f0;
-
   margin-bottom: 10px;
   height: 60px;
   width: 100%;
 }
-
-#video-title {
-  margin-top: 10px;
-  margin-bottom: 15px;
-  font-family: Roboto, arial, sans-serif;
-  font-size: 30px;
-}
-
 
 .navbar {
   position: relative;
   border-radius: 0px;
 }
 
+#navright {
+  position: relative;
+  height: 100%;
+}
 
+#help {
+  float: right;
+  max-height: 50%;
+  max-width: 50%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px;
+}
 
 .wrapper {
     /*width: 67%;*/
-    width: 33%;
+    padding: 0px;
     display:inline-block;
     position: relative;
     top: 50%;
@@ -84,7 +97,8 @@ body {
 }
 
 .wrapper button:hover {
-    background-color: #cccbcb;
+    /*background-color: #cccbcb;*/
+    background-color: #E33030;
 }
 
 .wrapper input {
@@ -114,6 +128,46 @@ body {
   outline-offset: 0px;
 }
 
+
+#main {
+  margin-top: 40px;
+}
+
+.shading {
+  padding: 0px;
+  height: 80vh;
+  background-color: #f0f0f0;
+  position: absolute;
+  box-shadow: 0 0 0 13px #f0f0f0;
+  border-radius: 4px;
+}
+
+
+#left, #right {
+  /*vertical-align:top;*/
+
+  display: inline;
+  float: left;
+}
+
+#right {
+  float: right;
+  height: 100%;
+  overflow-y: scroll;
+
+  font-size: 14px
+  padding-left: 0px;
+}
+
+#left {
+  top: 50%;
+  transform: translateY(-50%);  
+  margin-right: 12px;
+  padding-left: 0px;
+  padding-right: 0px;
+  /*background: #faa;*/
+}
+
 #transcript {
   padding: 20px;
   padding-left: 5px;
@@ -136,71 +190,11 @@ body {
   /*margin: 10px auto;*/
 }
 
-.shading {
-  padding: 0px;
-  height: 80vh;
-  background-color: #f0f0f0;
-  position: absolute;
-/*  border: 20px solid #f0f0f0;
-  border-radius: 20px;*/
-  /* Hard "outline" with box-shadow: */
-  /*box-shadow: 0 0 5pt 10pt #f0f0f0;*/
-
-
-    /* #1 */
-    
-    
-    /* #3 
-    outline: 5px solid hsl(0, 0%, 60%); */
-    
-    /* #4 AND INFINITY!!! (CSS3 only) */
-    box-shadow: 0 0 0 13px #f0f0f0;
-    border-radius: 4px;
-
-
-}
-
-/*.shading:after {
-  content: " ";
-  position: absolute;
-  z-index: -1;
-  top: 15px;
-  left: 15px;
-  right: 15px;
-  bottom: 15px;
-  border: 15px solid #ffea00;
-}*/
 
 #transcript span:hover {
-	/*color: red;*/
-  /*font-weight: bold;*/
   text-decoration: underline;
 }
 
-#left, #right {
-  /*vertical-align:top;*/
-
-  display: inline;
-  float: left;
-}
-
-#right {
-  float: right;
-  height: 100%;
-  overflow-y: scroll;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px
-  padding-left: 0px;
-}
-
-#left {
-  top: 15%;
-  margin-right: 12px;
-  padding-left: 0px;
-  padding-right: 0px;
-  /*background: #faa;*/
-}
 
 #instructions{
   margin-top: 30px;
@@ -213,9 +207,6 @@ body {
   font-size: 18px;
 }
 
-#main {
-  margin-top: 40px;
-}
 
 .boxed {
   border: 1px solid gray;
