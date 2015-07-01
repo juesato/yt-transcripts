@@ -13,30 +13,42 @@
 <body>
 	<div class="container">
 
+    <div id="navbar">
 
-		<div id="main">
       <div class="wrapper col-md-offset-1" id="searchform">
           <input type="text" id="yt-link" placeholder="Enter a YouTube URL"  onfocus="if(this.placeholder=='Enter a YouTube URL')this.placeholder='';" onblur="if(this.placeholder=='')this.placeholder='Enter a YouTube URL';"/>
-          <button type="button" onclick="loadVideo()">GO</button>
+          <button type="button" onclick="loadVideo()">Go!</button>
       </div>
+    </div>
+<!--       <form class="navbar-form navbar-left" role="search">
+        <div class="form-group" id="searchform">
+          <input type="text" class="form-control" placeholder="Enter a YouTube link">
+          <button type="submit" class="btn btn-default">Go!</button>
+        </div>
+      </form> -->
 
-      <div id="video-title" class="col-md-offset-1"></div>
 
-			<div id="left" class="col-xs-6 col-md-offset-1">
+		<div id="main">
 
 
-				<div id="player"></div>
+      <!-- <div id="video-title" class="col-md-offset-1"></div> -->
+      <div class="shading col-xs-10 col-md-offset-1">
+  			<div id="left" class="col-xs-5">
 
-<!-- 				<div id="instructions">
-					<p>1. Load a video.</p>
-					<p>2. Easily locate relevant sections in the transcript.</p>
-					<p>3. Click on the transcript to jump to the corresponding time.</p>
-				</div> -->
-			</div>
 
-			<div id="right" class="boxed col-xs-4 ">
-				<div id="transcript"></div>
-			</div>
+  				<div id="player"></div>
+
+  <!-- 				<div id="instructions">
+  					<p>1. Load a video.</p>
+  					<p>2. Easily locate relevant sections in the transcript.</p>
+  					<p>3. Click on the transcript to jump to the corresponding time.</p>
+  				</div> -->
+  			</div>
+
+  			<div id="right" class="col-xs-5 ">
+  				<div id="transcript"></div>
+  			</div>
+      </div>
 		</div>
 
 	</div>
