@@ -91,8 +91,14 @@ body {
 .wrapper input:hover {
   outline: 1px solid green;
   /*#c0c0c0;*/
+  /*background-color: blue;*/
+
 }
 
+.wrapper input:focus {
+  outline: 1px solid pink;
+  outline-offset: 0px;
+}
 
 #transcript {
   padding: 19px;
