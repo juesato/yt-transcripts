@@ -35,6 +35,8 @@ window.onYouTubeIframeAPIReady = function() {
     	resizePlayer();
     	setVideoTitle();
     }
+
+    console.log("Done Loading");
 };
 
 function getVideoTitle(ytId) {
@@ -240,6 +242,7 @@ function loadTranscript() {
 		iSpan.onclick = (function(j) {
 			return function() {
 				setVideoTime(clean[j].sta);
+				maintainPosition = true;
 			};
 		})(i);
 
@@ -287,11 +290,13 @@ function focusCaption(newLine) {
 	if (maintainPosition) {
 		autoscrolling = true;
 		scrollToCaption(focusedLine);
+		setTimeout(function(){autoscrolling = false;}, 50);
 	}
 }
 
 function scrollToCaption(caption) {
 	$("#right").scrollTop(curCaptionDivs[caption].offsetTop - .2 * windowHeight);
+	// autoscrolling = false;
 }
 
 function getSpeakerNames(lines) {
@@ -361,19 +366,26 @@ $(document).ready(function() {
 		setVideoTitle();
 	}
 
-	window.setInterval( function(){
-  		var time = player.getCurrentTime();
-  		var curCapt = getCaptionFromTime(time);
-  		focusCaption(curCapt);
+	window.setInterval(function(){
+  		seekToActiveCaption(0);
 	}, 100);
 });
+
+function seekToActiveCaption(forceScroll) {
+	var time = player.getCurrentTime();
+	var curCapt = getCaptionFromTime(time);
+	if (curCapt != focusedLine || forceScroll) focusCaption(curCapt);	
+}
 
 $("#right").scroll(function() {
 	if (!autoscrolling) {
 		maintainPosition = false;
-		console.log("detected scrolling");
+		// console.log("detected manual scrolling");
 	}
-	autoscrolling = false;
+	else {
+		// console.log("autoscroll");
+		autoscrolling = false;		
+	}
 });
 
 var tag = document.createElement('script');
@@ -391,5 +403,15 @@ document.onkeypress = function (e) {
     e = e || window.event;
     if (e.keyCode == 82 || e.keyCode == 114) { // 'r' 'R'
     	maintainPosition = true;
+  		seekToActiveCaption(true);
+    }
+    if (e.keyCode == 32) { // space for start/stop
+    	if (player.getPlayerState() == 1) { // 1 is the code for playing
+    		player.pauseVideo();
+    	}
+    	else {
+    		player.playVideo();
+    	}
+
     }
 };
