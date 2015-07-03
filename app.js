@@ -45,7 +45,6 @@ api.get('/auto_captions/*', function(req, res) {
             request(caption_url + '&' + params, function(error, response, body) {
             	console.log(caption_url + '&' + params);
             	if (!error && response.statusCode == 200) {
-            		console.log(body);
 		            var transcript = getXml(body);
 		            res.jsonp(transcript);
             	}

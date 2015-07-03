@@ -53,9 +53,9 @@ function getVideoTitle(ytId) {
 
 function setVideoTitle() {
 	var title = getVideoTitle(curVideoId);
-	var domTitle = document.getElementById("video-title");
-	domTitle.innerHTML = title;
-	document.title = "YouReader - " + title;
+	// var domTitle = document.getElementById("video-title");
+	// domTitle.innerHTML = title;
+	document.title = title + " - YtSkimmer";
 }
 
 function resizePlayer() {
@@ -115,15 +115,27 @@ function getTranscriptXML(ytId) {
 }
 
 function getAutoTranscript(ytId) {
+	var transcript = [];
 	var xmlReq = $.ajax({
-		"url": "http://www.youtube.com/watch?v=" + ytId
+		"url": "/api/auto_captions/" + ytId,
+		"async": false
 	});
 	xmlReq.done(function(html) {
-		console.log("Auto done");
 		console.log(html);
-	})
 
-	console.log(xhr);
+		var lines = html.transcript.text;
+		var cur, line;
+		for (var i = 0; i < lines.length; i++) {
+			cur = {};
+			line = lines[i];
+			cur.sta = line.$.start;
+			cur.dur = line.$.dur;
+			cur.txt = line._;
+			transcript.push(JSON.parse(JSON.stringify(cur)));
+		}
+	});
+	console.log(transcript);
+	return transcript;
 }
 
 function cleanLine(line) {
@@ -162,8 +174,14 @@ function cleanTranscript(lines) {
 
 		cur.beginPar = lines[i].beginPar;
 		cur.endPar = lines[i].endPar;
-
-		if (punctuation.indexOf(line.slice(-1)) != -1) {
+		
+		if (i == lines.length - 1) { // push everything else
+			console.log("END");
+			clean.push(JSON.parse(JSON.stringify(cur)));
+			cur.txt = "";
+			curdur = 0;
+		}
+		else if (punctuation.indexOf(line.slice(-1)) != -1) {
 			var endPar = false;
 			var curWordLen = cur.txt.split(" ").length;
 			// if words_per_second^1.5 * curlen > threshold, start a new paragraph
@@ -178,7 +196,8 @@ function cleanTranscript(lines) {
 				cur.endPar = true;
 			}
 
-			if (curWordLen < 4) { // join short lines with previous line
+			if (curWordLen < 4) { // join short lines with previous line 
+				// TODO: what if it's the first line?
 				var tmp = clean[clean.length-1].txt.split(NEW_PAR_STR); // get section before new line
 				if (tmp.length > 1) {
 					clean[clean.length-1].txt = tmp[0] + cur.txt + NEW_PAR_STR;
@@ -194,6 +213,7 @@ function cleanTranscript(lines) {
 			cur.txt = ""; // Reset
 			curdur = 0;
 		}
+
 	}
 
 	return clean;
@@ -210,29 +230,35 @@ function loadTranscript() {
 	var transcriptDiv = document.getElementById("transcript");
 	transcriptDiv.innerHTML = "";
 
+	var lines = [];
+
 	if (xml == -1) { // No transcript available
 		var iSpan = document.createElement("span");		
-		iSpan.innerHTML = "Sorry, no manual transcript is available";
+		// iSpan.innerHTML = "Sorry, no manual transcript is available";
+		iSpan.innerHTML = "The follow transcript is automatically generated: \n\n"
 		transcriptDiv.appendChild(iSpan);
 
-		var auto_xml = getAutoTranscript(curVideoId);
-		return;
+		lines = getAutoTranscript(curVideoId);
+		// return;
+	}
+	else {
+		var nodes = xml.getElementsByTagName("text");
+		
+		for (var i = 0; i < nodes.length; i++) {
+			var dur = parseFloat(nodes[i].getAttribute("dur"));
+			var start = nodes[i].getAttribute("start");
+			var text = nodes[i].innerHTML;
+
+			var cur = {};
+			cur.dur = dur;
+			cur.sta = start;
+			cur.txt = text;
+			lines.push(cur);
+		}			
 	}
 
-	var nodes = xml.getElementsByTagName("text");
-	
-	var lines = [];
-	for (var i = 0; i < nodes.length; i++) {
-		var dur = parseFloat(nodes[i].getAttribute("dur"));
-		var start = nodes[i].getAttribute("start");
-		var text = nodes[i].innerHTML;
-
-		var cur = {};
-		cur.dur = dur;
-		cur.sta = start;
-		cur.txt = text;
-		lines.push(cur);
-	}	
+	console.log("lines");
+	console.log(lines);
 
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -246,6 +272,9 @@ function loadTranscript() {
 
 
 	var clean = cleanTranscript(lines);
+
+	console.log("clean");
+	console.log(clean);
 
 	curCaptionTimes.length = 0;
 	curCaptionDivs.length = 0;
