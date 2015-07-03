@@ -6,6 +6,7 @@ Dependencies:
 Install node
 
 npm install express --save
+npm install request
 
 To run:
 node app.js

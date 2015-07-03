@@ -429,6 +429,7 @@ document.onkeypress = function (e) {
   		seekToActiveCaption(true);
     }
     if (e.keyCode == 32) { // space for start/stop
+    	console.log("startstop");
     	if (player.getPlayerState() == 1) { // 1 is the code for playing
     		player.pauseVideo();
     	}
