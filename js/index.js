@@ -104,13 +104,26 @@ function getTranscriptXML(ytId) {
 	xhr.open("GET", "http://www.youtube.com/api/timedtext?lang=en&v=" + ytId, async);
 	xhr.send();	// TODO: Make this async, and wrap everything else in xhr.onSuccess
 
-	console.log(xhr);
+	// console.log(xhr);
 
 	// TODO: Catch errors if manual transcript is unavailable
 	if (!xhr.responseXML) {
+		// console.log("No manual transcript available");
 		return -1;
 	}
 	return xhr.responseXML.firstChild;
+}
+
+function getAutoTranscript(ytId) {
+	var xmlReq = $.ajax({
+		"url": "http://www.youtube.com/watch?v=" + ytId
+	});
+	xmlReq.done(function(html) {
+		console.log("Auto done");
+		console.log(html);
+	})
+
+	console.log(xhr);
 }
 
 function cleanLine(line) {
@@ -201,6 +214,8 @@ function loadTranscript() {
 		var iSpan = document.createElement("span");		
 		iSpan.innerHTML = "Sorry, no manual transcript is available";
 		transcriptDiv.appendChild(iSpan);
+
+		var auto_xml = getAutoTranscript(curVideoId);
 		return;
 	}
 
@@ -366,9 +381,17 @@ $(document).ready(function() {
 		setVideoTitle();
 	}
 
+	var tooltipOptions = {
+		"html": true,
+		"placement": "bottom",
+		"trigger": "click"
+	};
+	$("#help").tooltip(tooltipOptions);
+
 	window.setInterval(function(){
   		seekToActiveCaption(0);
 	}, 100);
+
 });
 
 function seekToActiveCaption(forceScroll) {
