@@ -7,6 +7,7 @@ Install node
 
 npm install express --save
 npm install request
+npm install xml2js
 
 To run:
 node app.js
