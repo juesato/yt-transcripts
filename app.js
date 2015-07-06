@@ -91,7 +91,7 @@ api.get('/auto_captions/*', function(req, res) {
 	// });
 });
 
-app.use('/static', express.static('static'));
+app.use('/static', express.static('views/static'));
 app.get('/', function(req, res) {
 
 	res.render('index', {ytId: 42});

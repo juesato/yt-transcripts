@@ -72,6 +72,16 @@ function resizePlayer() {
 	});
 }
 
+function loadVideoFormSubmit() {
+	var ytLink = document.getElementById("yt-link");
+	var ytUrl = ytLink.value;
+	if (ytUrl.trim().length == 0) {
+		return false;
+	}
+	ytLink.value = getYoutubeId(ytUrl);
+	return true;
+}
+
 function loadVideo() {
 	console.log("loadVideo");
 

@@ -14,10 +14,10 @@
 	<div class="container">
     <div id="navbar">
 
-      <div class="wrapper col-xs-5 col-xs-offset-1" id="searchform">
-          <input type="text" id="yt-link" placeholder="Enter a YouTube URL"  onfocus="if(this.placeholder=='Enter a YouTube URL')this.placeholder='';" onblur="if(this.placeholder=='')this.placeholder='Enter a YouTube URL';"/>
-          <button type="button" onclick="loadVideo()">Go!</button>
-      </div>
+      <form class="wrapper col-xs-5 col-xs-offset-1" id="searchform" onsubmit="loadVideoFormSubmit();">
+          <input type="text" id="yt-link" name="v" placeholder="Enter a YouTube URL"  onfocus="if(this.placeholder=='Enter a YouTube URL')this.placeholder='';" onblur="if(this.placeholder=='')this.placeholder='Enter a YouTube URL';"/>
+          <button type="submit" >Go!</button>
+      </form>
       <div class="col-xs-5 no-padding constrain" id="navright">
         <img id="help" src="static/img/help_icon.gif" <a href="#" data-toggle="tooltip" data-placement="top" title="first tooltip" alt="Help Directions">
       </div>
