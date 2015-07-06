@@ -3,6 +3,10 @@ var http = require("http");
 var app = express();
 var request = require("request");
 var parseXml = require('xml2js').parseString;
+var hbs = require("handlebars");
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'hbs');
 
 var api = express();
 api.get('/auto_captions/*', function(req, res) {
@@ -87,7 +91,12 @@ api.get('/auto_captions/*', function(req, res) {
 	// });
 });
 
-app.use('/', express.static('static'));
+app.use('/static', express.static('static'));
+app.get('/', function(req, res) {
+
+	res.render('index', {ytId: 42});
+});
+
 app.use('/api', api);
 
 var server = app.listen(3000, function() {
