@@ -36,7 +36,7 @@ api.get('/auto_captions/*', function(req, res) {
                 'asrs': 1,
             })
             var list_url = caption_url + '&' + list_params;
-            console.log(list_url);
+            // console.log(list_url);
 
             var params = urlEncode({
             	'lang': 'en',
@@ -47,7 +47,7 @@ api.get('/auto_captions/*', function(req, res) {
             });
 
             request(caption_url + '&' + params, function(error, response, body) {
-            	console.log(caption_url + '&' + params);
+            	// console.log(caption_url + '&' + params);
             	if (!error && response.statusCode == 200) {
 		            var transcript = getXml(body);
 		            res.jsonp(transcript);
@@ -94,7 +94,11 @@ api.get('/auto_captions/*', function(req, res) {
 app.use('/static', express.static('views/static'));
 
 var homepage = function(req, res) {
-	res.render('index', {ytId: 42});
+	console.log("homepage function");
+	var query = req.query || {};
+	var ytId = query.v || 'Ei8CFin00PY';
+	res.render('index', {'ytId': ytId});
+	console.log("end render");
 };
 
 app.get('/', homepage);
@@ -124,24 +128,15 @@ function getPageContents(url) {
 	var contents;
 	console.log("getPageContentsBeg for ", url);
 	request.get(url, function(error, res, body) {
-		console.log("beginRequest");
 		if (error) {
 			console.log("Error");
-			console.log(error);
 			contents = null;
 			// return null;
 		}
 		else {
-			console.log("LOOOK FOR ME\n\n\n\n\n");
-			console.log("Response is ", res.statusCode);
 			contents = body;
-			console.log(contents);
-			console.log("SPACE");
-			// return body;
 		}
 	});
-	console.log(request.statusCode);
-	console.log("endPg");
 	return contents;
 }
 

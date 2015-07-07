@@ -1,4 +1,4 @@
-var curVideoId = 'Ei8CFin00PY';
+// var curVideoId = 'Ei8CFin00PY';
 // var curVideoId = 'lZ3bPUKo5zc';
 var player;
 var domWindow, windowWidth, windowHeight;
