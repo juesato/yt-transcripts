@@ -32,7 +32,6 @@ api.get('/auto_captions/*', function(req, res) {
 				return;
 			}
 			var player_config = JSON.parse(mobj[1]);
-
             var args = player_config['args'],
             	caption_url = args['ttsurl'],
             	timestamp = args['timestamp'];
@@ -60,11 +59,10 @@ api.get('/auto_captions/*', function(req, res) {
             };
             if (!caption_url) {
                 console.log("Captions unavailable");
-                res.jsonp({});
+                res.jsonp({timeout: true});
                 return;
             }
-            console.log("before inner request");
-            console.log(options2.uri);
+
             request(options2, function(error, response, body) {
             	// console.log(caption_url + '&' + params);
                 console.log("innercallback");
@@ -75,13 +73,14 @@ api.get('/auto_captions/*', function(req, res) {
             }).on('error', function(err) {
                 console.log("ERROR");
                 if (err.code === 'ETIMEDOUT') {
-                    res.jsonp({});
+                    res.jsonp({timeout: true});
                     console.log("TimeoutInner!");
                 }
             });
 		}
 	}).on('error', function(err) {
       if (err.code === 'ETIMEDOUT') {
+        res.jsonp({timeout: true});
         console.log("Timeout!");
       }
     });
@@ -90,11 +89,9 @@ api.get('/auto_captions/*', function(req, res) {
 app.use('/static', express.static('views/static'));
 
 var homepage = function(req, res) {
-	console.log("homepage function");
 	var query = req.query || {};
 	var ytId = query.v || 'Ei8CFin00PY';
 	res.render('index', {'ytId': ytId});
-	console.log("end render");
 };
 
 app.get('/', homepage);
