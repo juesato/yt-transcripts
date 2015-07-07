@@ -10,12 +10,20 @@ app.set('view engine', 'hbs');
 
 var api = express();
 api.get('/auto_captions/*', function(req, res) {
-	// var url = "http://www.dailymail.co.uk/news/article-2297585/Wild-squirrels-pose-charming-pictures-photographer-hides-nuts-miniature-props.html"
 	var url = "http://www.youtube.com"
 	var ytId = req._parsedUrl.pathname.split('auto_captions/')[1].split('/')[0];
 	var ytUrl = "http://www.youtube.com/watch?v=" + ytId;
+    var options = {
+        'uri': ytUrl,
+        'timeout': 1000,
+        'followRedirect': true,
+        'maxRedirects': 5
+    };
 
-	request(ytUrl, function(error, response, body) {
+    console.log("before request");
+
+	request(options, function(error, response, body) {
+        console.log("MADE THE CALLBACK");
 		if (!error && response.statusCode == 200) {
 			var re = /;ytplayer.config = ({.*?});/;
 			var mobj = body.match(re);
@@ -46,49 +54,37 @@ api.get('/auto_captions/*', function(req, res) {
             	'kind': "asr" // this might be wrong
             });
 
-            request(caption_url + '&' + params, function(error, response, body) {
+            var options2 = {
+                'uri': caption_url + '&' + params,
+                'timeout': 1000
+            };
+            if (!caption_url) {
+                console.log("Captions unavailable");
+                res.jsonp({});
+                return;
+            }
+            console.log("before inner request");
+            console.log(options2.uri);
+            request(options2, function(error, response, body) {
             	// console.log(caption_url + '&' + params);
+                console.log("innercallback");
             	if (!error && response.statusCode == 200) {
 		            var transcript = getXml(body);
 		            res.jsonp(transcript);
             	}
+            }).on('error', function(err) {
+                console.log("ERROR");
+                if (err.code === 'ETIMEDOUT') {
+                    res.jsonp({});
+                    console.log("TimeoutInner!");
+                }
             });
-
-
-            // caption_list = self._download_xml(list_url, video_id)
-            // original_lang_node = caption_list.find('track')
-
-            // if original_lang_node is None:
-            //     self._downloader.report_warning('Video doesn\'t have automatic captions')
-            //     return {}
-            // original_lang = original_lang_node.attrib['lang_code']
-            // caption_kind = original_lang_node.attrib.get('kind', '')
-
-            // sub_lang_list = {}
-            // for lang_node in caption_list.findall('target'):
-            //     sub_lang = lang_node.attrib['lang_code']
-            //     sub_formats = []
-            //     for ext in ['sbv', 'vtt', 'srt']:
-            //         params = compat_urllib_parse.urlencode({
-            //             'lang': original_lang,
-            //             'tlang': sub_lang,
-            //             'fmt': ext,
-            //             'ts': timestamp,
-            //             'kind': caption_kind,
-            //         })
-            //         sub_formats.append({
-            //             'url': caption_url + '&' + params,
-            //             'ext': ext,
-            //         })
-            //     sub_lang_list[sub_lang] = sub_formats
-            // return sub_lang_list
 		}
-	});
-
-	// res.jsonp({
-	// 	'ytId': ytId,
-	// 	'ytUrl': ytUrl
-	// });
+	}).on('error', function(err) {
+      if (err.code === 'ETIMEDOUT') {
+        console.log("Timeout!");
+      }
+    });
 });
 
 app.use('/static', express.static('views/static'));
