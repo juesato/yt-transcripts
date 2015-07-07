@@ -14,7 +14,7 @@
 	<div class="container">
     <div id="navbar">
 
-      <form class="wrapper col-xs-5 col-xs-offset-1" id="searchform" onsubmit="loadVideoFormSubmit();">
+      <form class="wrapper col-xs-5 col-xs-offset-1" id="searchform" action="watch" onsubmit="return loadVideoFormSubmit();">
           <input type="text" id="yt-link" name="v" placeholder="Enter a YouTube URL"  onfocus="if(this.placeholder=='Enter a YouTube URL')this.placeholder='';" onblur="if(this.placeholder=='')this.placeholder='Enter a YouTube URL';"/>
           <button type="submit" >Go!</button>
       </form>

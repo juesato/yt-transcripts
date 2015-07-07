@@ -92,10 +92,13 @@ api.get('/auto_captions/*', function(req, res) {
 });
 
 app.use('/static', express.static('views/static'));
-app.get('/', function(req, res) {
 
+var homepage = function(req, res) {
 	res.render('index', {ytId: 42});
-});
+};
+
+app.get('/', homepage);
+app.get('/watch', homepage);
 
 app.use('/api', api);
 
