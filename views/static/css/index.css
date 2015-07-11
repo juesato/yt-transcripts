@@ -116,7 +116,7 @@ body {
   padding-left: 8px;
   font-size: 20px;
   font-weight: 100;
-  color: #cccbcb;
+  /*color: #cccbcb;*/
   /*border: 1px solid #bfbebe;*/
   outline:  1px solid #bfbebe;
   border: none;
@@ -124,16 +124,34 @@ body {
 
 }
 
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #cccbcb
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color: #cccbcb
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color: #cccbcb
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color: #cccbcb
+}
+
 .wrapper input:hover {
-  outline: 1px solid green;
+  outline: 1px solid #939393;
   /*#c0c0c0;*/
   /*background-color: blue;*/
 
 }
 
 .wrapper input:focus {
-  outline: 1px solid pink;
+  outline: 1px solid #2CBBFF;
   outline-offset: 0px;
+   -moz-box-shadow:    inset 0 0 3px #000000;
+   -webkit-box-shadow: inset 0 0 3px #000000;
+   box-shadow:         inset 0 0 3px #000000;
 }
 
 

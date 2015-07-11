@@ -20,10 +20,8 @@ api.get('/auto_captions/*', function(req, res) {
         'maxRedirects': 5
     };
 
-    console.log("before request");
 
 	request(options, function(error, response, body) {
-        console.log("MADE THE CALLBACK");
 		if (!error && response.statusCode == 200) {
 			var re = /;ytplayer.config = ({.*?});/;
 			var mobj = body.match(re);
