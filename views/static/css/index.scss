@@ -9,6 +9,8 @@ $popover-bg: white;
 $navheight: 60px;
 $arrowht: 8px;
 
+$instruct-fontsz: 16px;
+
 @mixin border-radius($radius) {
   -moz-border-radius: $radius;
   -webkit-border-radius: $radius;
@@ -286,4 +288,62 @@ body {
 
 .boxed {
   border: 1px solid gray;
+}
+
+.padlinetop {
+  padding-top: 15px;
+}
+
+.padsectiontop {
+  padding-top: 20px;
+}
+
+.margin25 {
+  margin: 25px;
+}
+
+.margin30 {
+  margin: 30px;
+}
+
+.margin-lr-default {
+  margin-left: 7%;
+  margin-right: 7%;
+}
+
+.margin-top-default {
+  margin-top: 5%;
+}
+
+.margin-bot-default {
+  margin-bottom: 5%;
+}
+
+.instruct-cmd {
+  /*display: inline;*/
+  width: 17%;
+  font-family: $navbar-font;
+  font-weight: bold;
+  font-size: $instruct-fontsz;
+}
+
+.instruct-desc {
+  /*display: inline;*/
+  width: 83%;
+  font-family: $navbar-font;
+  font-size: $instruct-fontsz;
+  padding-left: 20px;
+}
+
+.help-content {
+  font-family: $navbar-font;
+  font-size: $instruct-fontsz;
+}
+
+#hotkeys {
+  table-layout: fixed;
+  width: 100%;
+}
+td {
+  padding: inherit;
 }

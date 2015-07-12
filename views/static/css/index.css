@@ -236,3 +236,50 @@ body {
 
 .boxed {
   border: 1px solid gray; }
+
+.padlinetop {
+  padding-top: 15px; }
+
+.padsectiontop {
+  padding-top: 20px; }
+
+.margin25 {
+  margin: 25px; }
+
+.margin30 {
+  margin: 30px; }
+
+.margin-lr-default {
+  margin-left: 7%;
+  margin-right: 7%; }
+
+.margin-top-default {
+  margin-top: 5%; }
+
+.margin-bot-default {
+  margin-bottom: 5%; }
+
+.instruct-cmd {
+  /*display: inline;*/
+  width: 17%;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  font-size: 16px; }
+
+.instruct-desc {
+  /*display: inline;*/
+  width: 83%;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  padding-left: 20px; }
+
+.help-content {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 16px; }
+
+#hotkeys {
+  table-layout: fixed;
+  width: 100%; }
+
+td {
+  padding: inherit; }
