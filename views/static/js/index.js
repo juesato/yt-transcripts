@@ -14,7 +14,7 @@ var maintainPosition = true;
 var autoscrolling = false;
 
 window.onYouTubeIframeAPIReady = function() {
-	console.log("YouTube API Ready");
+	// console.log("YouTube API Ready");
 
     player = new YT.Player('player', {
         videoId: curVideoId,
@@ -22,10 +22,7 @@ window.onYouTubeIframeAPIReady = function() {
             controls: 1,
             autoplay: 0,
             disablekb: 1,
-            enablejsapi: 1,
-            // iv_load_policy: 3,
-            // modestbranding: 1,
-            // showinfo: 1
+            enablejsapi: 1
         }
     });	
 
@@ -39,7 +36,7 @@ window.onYouTubeIframeAPIReady = function() {
 		}, 100);
     }
 
-    console.log("Done Loading");
+    // console.log("Done Loading");
 };
 
 function setVideoTitle(ytId) {
@@ -51,8 +48,10 @@ function setVideoTitle(ytId) {
     	if (xhr.readyState==4 && xhr.status==200) {
 			var data = JSON.parse(xhr.response);
 			// console.log(data);
-			var title = data.items[0].snippet.title;
-			document.title = title + " - YtSkimmer";
+			if (data.items[0]) {
+				var title = data.items[0].snippet.title;
+				document.title = "YT Skimmer | " + title;	
+			}
     	}
 	};
 	xhr.onerror = function(e) {
@@ -385,6 +384,7 @@ $(document).ready(function() {
 });
 
 function seekToActiveCaption(forceScroll) {
+	if (!player.getCurrentTime) return;
 	var time = player.getCurrentTime();
 	var curCapt = getCaptionFromTime(time);
 	if (curCapt != focusedLine || forceScroll) focusCaption(curCapt);	
