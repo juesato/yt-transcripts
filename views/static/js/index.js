@@ -34,6 +34,9 @@ window.onYouTubeIframeAPIReady = function() {
     if (windowWidth) { // if document loaded first
     	resizePlayer();
     	setVideoTitle();
+		window.setInterval(function(){
+	  		seekToActiveCaption(0);
+		}, 100);
     }
 
     console.log("Done Loading");
@@ -63,8 +66,9 @@ function setVideoTitle(ytId) {
 function resizePlayer() {
 	$(document).ready(function() {
 		windowWidth = domWindow.width();
+		var shadingHeight = $(".shading").height();
 		// console.log("resizePlayer");
-		var playerWidth = 5.5 * windowWidth / 12;
+		var playerWidth = Math.min(5.5 * windowWidth / 12, shadingHeight * .9 * 4/3);
 		var playerHeight = 3 * playerWidth / 4.0;
 
 		var nodePlayer = $("player");
@@ -349,28 +353,6 @@ function getSpeakerNames(lines) {
 	return names;
 }
 
-function resizePanels() {
-	console.log("resizePanels");
-
-	var origLeftWidth, origRightWidth;
-
-	$("#resize-handle").draggable({
-		axis: 'x',
-		start: function(event, ui) {
-			origLeftWidth = $("#left").width();
-			origRightWidth = $("#right").width();
-		},
-		drag: function(event, ui) {
-			var lWidth = origLeftWidth + (ui.position.left - ui.originalPosition.left);
-			player.setSize(lWidth, 9 * lWidth / 16.0);
-			$("#left").width(lWidth);
-			$("#right").width(origRightWidth - (ui.position.left - ui.originalPosition.left));
-		},
-		containment: "parent"
-		
-	});
-}
-
 function setDefaultWidths() {
 	console.log("setDefaultWidths");
 	var x1 = .5 * windowWidth - 22;
@@ -388,6 +370,9 @@ $(document).ready(function() {
 	if (ytLoaded) { // if YouTube API loaded first
 		resizePlayer(); 
 		setVideoTitle(curVideoId);
+		window.setInterval(function(){
+	  		seekToActiveCaption(0);
+		}, 100);	
 	}
 
 	var popoverOptions = {
@@ -396,10 +381,6 @@ $(document).ready(function() {
 		"trigger": "click"
 	};
 	$("#help").popover(popoverOptions);
-
-	window.setInterval(function(){
-  		seekToActiveCaption(0);
-	}, 100);
 
 });
 
@@ -428,6 +409,7 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var resizeId;
 window.onresize = function() {
  	clearTimeout(resizeId);
+ 	console.log("resize");
  	resizeId = setTimeout(resizePlayer(), 100);
 }
 
