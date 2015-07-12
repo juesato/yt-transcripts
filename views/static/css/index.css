@@ -45,32 +45,34 @@ body {
 
 #help-popover {
   position: absolute;
-  top: 0px;
+  top: 62px;
+  left: 0px;
   right: 0px;
-  height: 300px;
-  width: 400px;
+  height: 500px;
   /*background-color: blue;*/
   z-index: 10; }
-
-#help-popover .instructions {
-  position: absolute;
-  top: 62px;
-  right: 50px;
-  left: 0;
-  bottom: 0;
-  background-color: white;
-  -moz-box-shadow: -2px 2px 10px 0px gray;
-  -webkit-box-shadow: -2px 2px 10px 0px gray;
-  box-shadow: -2px 2px 10px 0px gray; }
-
-#help-popover .arrow-up {
-  position: absolute;
-  /*z-index: 11;*/
-  top: 54px;
-  /*top + border-bottom has to be navbar height*/
-  right: 100px;
-  z-index: 11;
-  /*Frick this is based on the grid in percentage */ }
+  #help-popover #arrow-nest {
+    position: absolute;
+    background-color: green;
+    top: 0; }
+    #help-popover #arrow-nest .arrow-up {
+      position: absolute;
+      /*z-index: 11;*/
+      top: -8px;
+      /*top + border-bottom has to be navbar height*/
+      right: 5px;
+      z-index: 11;
+      /*Frick this is based on the grid in percentage */ }
+  #help-popover .instructions {
+    position: absolute;
+    top: 0px;
+    right: 4%;
+    width: 25%;
+    max-width: 600px;
+    background-color: white;
+    -moz-box-shadow: -2px 2px 10px 0px gray;
+    -webkit-box-shadow: -2px 2px 10px 0px gray;
+    box-shadow: -2px 2px 10px 0px gray; }
 
 .arrow-up {
   width: 0;

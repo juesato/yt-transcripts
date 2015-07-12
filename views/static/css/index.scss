@@ -7,6 +7,7 @@ $navbar-font: Helvetica Neue, Helvetica, Arial, sans-serif;
 $popover-bg: white;
 
 $navheight: 60px;
+$arrowht: 8px;
 
 @mixin border-radius($radius) {
   -moz-border-radius: $radius;
@@ -73,39 +74,45 @@ body {
 
 #help-popover {
   position: absolute;
-  top: 0px;
+  top: $navheight + 2px;
+  left: 0px;
   right: 0px;
-  height: 300px;
-  width: 400px;
+  height: 500px;
   /*background-color: blue;*/
   z-index: 10;
-}
 
-#help-popover .instructions {
-  position: absolute;
-  top: $navheight + 2px;
-  right: 50px;
-  left: 0;
-  bottom: 0;
-  background-color: $popover-bg;
-  @include box-shadow(-2px, 2px, 10px, 0px, gray);
-}
+  #arrow-nest {
+    position: absolute;
+    background-color: green;
+    top: 0;
+    .arrow-up {
+      position: absolute;
+      /*z-index: 11;*/
+      top: -$arrowht; /*top + border-bottom has to be navbar height*/
+      right: 5px;
+      z-index: 11;
+      /*Frick this is based on the grid in percentage */
+    }
 
-#help-popover .arrow-up {
-  position: absolute;
-  /*z-index: 11;*/
-  top: $navheight - 8px + 2px; /*top + border-bottom has to be navbar height*/
-  right: 100px;
-  z-index: 11;
-  /*Frick this is based on the grid in percentage */
+  }
+
+  .instructions {
+    position: absolute;
+    top: 0px;
+    right: 4%;
+    width: 25%;
+    max-width: 600px;
+    background-color: $popover-bg;
+    @include box-shadow(-2px, 2px, 10px, 0px, gray);
+  }
 }
 
 .arrow-up {
   width: 0; 
   height: 0; 
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent; 
-  border-bottom: 8px solid $popover-bg;
+  border-left: $arrowht solid transparent;
+  border-right: $arrowht solid transparent; 
+  border-bottom: $arrowht solid $popover-bg;
 }
 
 #help-icon {
