@@ -390,12 +390,12 @@ $(document).ready(function() {
 		setVideoTitle(curVideoId);
 	}
 
-	var tooltipOptions = {
+	var popoverOptions = {
 		"html": true,
 		"placement": "bottom",
 		"trigger": "click"
 	};
-	$("#help").tooltip(tooltipOptions);
+	$("#help").popover(popoverOptions);
 
 	window.setInterval(function(){
   		seekToActiveCaption(0);

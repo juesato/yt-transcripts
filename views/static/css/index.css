@@ -38,7 +38,7 @@ body {
   /*background-color: black;*/
   /*border-bottom: thin solid red;*/
   background-color: #f0f0f0;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
   height: 60px;
   width: 100%;
 }
@@ -51,6 +51,47 @@ body {
 #navright {
   position: relative;
   height: 100%;
+}
+
+#topright {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#help-popover {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 300px;
+  width: 400px;
+  /*background-color: blue;*/
+  z-index: 10;
+}
+
+#help-popover .instructions {
+  position: absolute;
+  top: 60px;
+  right: 60px;
+  left: 0;
+  bottom: 0;
+  background-color: green;
+}
+
+#help-popover .arrow-up {
+  position: absolute;
+  /*z-index: 11;*/
+  top: 50px; /*top + border-bottom has to be navbar height*/
+  right: 100px;
+  /*Frick this is based on the grid in percentage */
+}
+
+.arrow-up {
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent; 
+  border-bottom: 10px solid black;
 }
 
 #help {
@@ -220,19 +261,6 @@ body {
 #transcript span:hover {
   text-decoration: underline;
 }
-
-
-#instructions{
-  margin-top: 30px;
-}
-
-#instructions p {
-  margin-top:5px;
-  margin-bottom: 5px;
-  font-family: Roboto, arial, sans-serif;
-  font-size: 18px;
-}
-
 
 .boxed {
   border: 1px solid gray;
