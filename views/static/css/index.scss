@@ -1,3 +1,18 @@
+$navbar-primary: #E84545;
+$search-default: #E86666;
+$search-hover: #FF8C8C;
+$search-focus: white;
+$placeholder-color: white;
+$navbar-font: Helvetica Neue, Helvetica, Arial, sans-serif;
+
+@mixin border-radius($radius) {
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+  border-radius: $radius; /* future proofing */
+  -khtml-border-radius: $radius; /* for old Konqueror browsers */  
+}
+
+
 .container {
    padding-right: 0; /*15px in bootstrap.css*/
    padding-left: 0;  /*idem*/
@@ -29,12 +44,11 @@ body {
 }
 
 #navbar {
-  /*background-color: black;*/
-  /*border-bottom: thin solid red;*/
-  background-color: #f0f0f0;
-  /*margin-bottom: 10px;*/
+  /*background-color: #f0f0f0;*/
+  background-color: $navbar-primary;
   height: 60px;
   width: 100%;
+  font-family: $navbar-font;
 }
 
 .navbar {
@@ -146,47 +160,48 @@ body {
 
 .wrapper input {
   width: 90%;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 8px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 100;
-  /*color: #cccbcb;*/
-  /*border: 1px solid #bfbebe;*/
-  outline:  1px solid #bfbebe;
+  /*outline:  1px solid #bfbebe;*/
+  color: $placeholder-color;
   border: none;
+  @include border-radius(2px);
   margin-right: -1px;
-
+  background-color: $search-default;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: #cccbcb;
+    color: $placeholder-color;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: #cccbcb;
+   color: $placeholder-color;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: #cccbcb;
+   color: $placeholder-color;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-   color: #cccbcb;
+   color: $placeholder-color;
 }
 
 .wrapper input:hover {
-  outline: 1px solid #939393;
-  /*#c0c0c0;*/
-  /*background-color: blue;*/
-
+  /*outline: 1px solid #939393;*/
+  background-color: $search-hover;
 }
 
 .wrapper input:focus {
-  outline: 1px solid #2CBBFF;
+  outline: none;
+  background-color: $search-focus;
+  color: black;
+/*  outline: 1px solid #2CBBFF;
   outline-offset: 0px;
    -moz-box-shadow:    inset 0 0 3px #000000;
    -webkit-box-shadow: inset 0 0 3px #000000;
-   box-shadow:         inset 0 0 3px #000000;
+   box-shadow:         inset 0 0 3px #000000;*/
 }
 
 

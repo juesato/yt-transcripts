@@ -26,12 +26,11 @@ body {
   height: 100%; }
 
 #navbar {
-  /*background-color: black;*/
-  /*border-bottom: thin solid red;*/
-  background-color: #f0f0f0;
-  /*margin-bottom: 10px;*/
+  /*background-color: #f0f0f0;*/
+  background-color: #E84545;
   height: 60px;
-  width: 100%; }
+  width: 100%;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif; }
 
 .navbar {
   position: relative;
@@ -128,46 +127,54 @@ body {
 
 .wrapper input {
   width: 90%;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   padding-left: 8px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 100;
-  /*color: #cccbcb;*/
-  /*border: 1px solid #bfbebe;*/
-  outline: 1px solid #bfbebe;
+  /*outline:  1px solid #bfbebe;*/
+  color: white;
   border: none;
-  margin-right: -1px; }
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  /* future proofing */
+  -khtml-border-radius: 2px;
+  /* for old Konqueror browsers */
+  margin-right: -1px;
+  background-color: #E86666; }
 
 ::-webkit-input-placeholder {
   /* WebKit browsers */
-  color: #cccbcb; }
+  color: white; }
 
 :-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-  color: #cccbcb;
+  color: white;
   opacity: 1; }
 
 ::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-  color: #cccbcb;
+  color: white;
   opacity: 1; }
 
 :-ms-input-placeholder {
   /* Internet Explorer 10+ */
-  color: #cccbcb; }
+  color: white; }
 
 .wrapper input:hover {
-  outline: 1px solid #939393;
-  /*#c0c0c0;*/
-  /*background-color: blue;*/ }
+  /*outline: 1px solid #939393;*/
+  background-color: #FF8C8C; }
 
 .wrapper input:focus {
-  outline: 1px solid #2CBBFF;
-  outline-offset: 0px;
-  -moz-box-shadow: inset 0 0 3px #000000;
-  -webkit-box-shadow: inset 0 0 3px #000000;
-  box-shadow: inset 0 0 3px #000000; }
+  outline: none;
+  background-color: white;
+  color: black;
+  /*  outline: 1px solid #2CBBFF;
+    outline-offset: 0px;
+     -moz-box-shadow:    inset 0 0 3px #000000;
+     -webkit-box-shadow: inset 0 0 3px #000000;
+     box-shadow:         inset 0 0 3px #000000;*/ }
 
 #main {
   margin-top: 40px; }
