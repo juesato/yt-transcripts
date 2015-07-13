@@ -374,13 +374,27 @@ $(document).ready(function() {
 		}, 100);	
 	}
 
-	var popoverOptions = {
-		"html": true,
-		"placement": "bottom",
-		"trigger": "click"
-	};
-	$("#help").popover(popoverOptions);
+	// $("#help-icon").click(function() {
+	// 	console.log("Help icon clicked");
+	// 	if (!($("#help-popover").is(":visible"))) {
+	// 		console.log("Hidden");
+	// 		$("#help-popover").show();
+	// 	}
+	// });
 
+	$(document).click(function(event) {
+		if ($("#help-popover").is(":visible")) {
+			console.log("visible");
+			if (!($(event.target).closest('#instructions').length)) {
+				$("#help-popover").hide();
+			}
+		}
+		else {
+			if ($(event.target).closest('#help-icon').length) {
+				$("#help-popover").show();
+			}
+		}
+	});
 });
 
 function seekToActiveCaption(forceScroll) {

@@ -75,6 +75,7 @@ body {
 }
 
 #help-popover {
+  display: none;  
   position: absolute;
   top: $navheight + 2px;
   left: 0px;
@@ -98,7 +99,7 @@ body {
 
   }
 
-  .instructions {
+  #instructions {
     position: absolute;
     top: 0px;
     right: 4%;
@@ -131,6 +132,7 @@ body {
 }
 
 #help-icon:hover {
+  cursor: pointer;
   opacity: 1.0;
   filter: alpha(opacity=100);
 }

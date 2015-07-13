@@ -44,6 +44,7 @@ body {
   right: 0; }
 
 #help-popover {
+  display: none;
   position: absolute;
   top: 62px;
   left: 0px;
@@ -63,7 +64,7 @@ body {
       right: 5px;
       z-index: 11;
       /*Frick this is based on the grid in percentage */ }
-  #help-popover .instructions {
+  #help-popover #instructions {
     position: absolute;
     top: 0px;
     right: 4%;
@@ -93,6 +94,7 @@ body {
   filter: alpha(opacity=100); }
 
 #help-icon:hover {
+  cursor: pointer;
   opacity: 1.0;
   filter: alpha(opacity=100); }
 
