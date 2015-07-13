@@ -1,18 +1,16 @@
 var express = require('express');
 var http = require("http");
-var app = express();
 var request = require("request");
 var parseXml = require('xml2js').parseString;
+var bodyParser = require('body-parser');
 var hbs = require("handlebars");
+
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-// var monk = require('monk');
-// var db = monk('localhost:27017/data');
-var bodyParser = require('body-parser');
-
 
 mongoose.connect('mongodb://localhost/mydata')
+
+var Schema = mongoose.Schema;
 
 var captionSchema = new Schema({
     txt: String,
@@ -35,30 +33,6 @@ var Caption = mongoose.model('caption', captionSchema);
 var Transcript = mongoose.model('transcript', transcriptSchema);
 var Video = mongoose.model('video', videoSchema);
 
-var cap1 = new Caption({
-    txt: "some text",
-    sta: 1.23,
-    dur: 42.42
-});
-var transcript1 = new Transcript({
-    ytId: "sampleytid",
-    captions: [cap1]
-});
-
-var video1 = new Video({
-    ytId: "sampleytid",
-    // transcripts: [transcript1]
-    // transcripts: ['hi', 'not', 'right']
-});
-
-video1.save(function (err, userObj) {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log('saved: ', userObj);
-    }
-});
-
 function toIdString(str) {
     while (str.length < 24) {
         str += '!';
@@ -66,10 +40,10 @@ function toIdString(str) {
     return str;
 }
 
-
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
 
+var app = express();
 var api = express();
 
 api.use(bodyParser.json()); // support json encoded bodies
@@ -160,21 +134,19 @@ api.post('/postTranscript*', function(req, res) {
     console.log(ytId);
 
     if (transcript) {
-        // conditions, update, options. returns Query
         Video.find({ytId: ytId}, function (err, docs) {
-            console.log(docs);  
+            var cur = new Transcript({captions: transcript});
+
             if (docs.length) {
                 console.log("update video");
-                Video.findOneAndUpdate({ytId: ytId},
-                    {$addToSet: {transcripts: transcript}},
+                Video.findOneAndUpdate(
+                    {ytId: ytId},
+                    {$addToSet: {transcripts: cur}},
                     {upsert: true}
                 );                  
             }
             else {
                 console.log("new video");
-                console.log(transcript[0])
-                var cur = new Transcript({captions: transcript});
-                console.log(cur);
                 Video.create({
                     ytId: ytId,
                     transcripts: [cur]
@@ -186,7 +158,6 @@ api.post('/postTranscript*', function(req, res) {
     }
     res.jsonp({"madePost": madePost});
 });
-
 
 
 app.use('/static', express.static('views/static'));
