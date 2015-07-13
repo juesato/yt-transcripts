@@ -230,7 +230,6 @@ function loadTranscript() {
 							cur.txt = line._;
 							linesAuto.push(JSON.parse(JSON.stringify(cur)));
 						}
-						console.log("load auto liens");
 						loadLinesIntoDOM(linesAuto);
 					}
 				};
@@ -290,6 +289,28 @@ function loadLinesIntoDOM(lines) {
 		curCaptionDivs.push(iSpan);
 		curCaptionTimes.push(clean[i].sta);
 	}
+
+	console.log("load lines into DOM");
+	$.ajax({
+		url:'/api/postTranscript',
+		async: true,
+		type: 'POST',
+		data: {
+			// 'transcript': clean,
+			'ytId': curVideoId
+		},
+		complete: function() {
+			console.log(this.url);
+		},
+		success: function(data) {
+			console.log("Posted to db");
+			console.log(data)
+		},
+		error: function(err) {
+			console.log("couldn't posted to db");
+			console.log(err);
+		}	
+	});
 	return 1;
 }
 

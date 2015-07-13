@@ -4,14 +4,73 @@ var app = express();
 var request = require("request");
 var parseXml = require('xml2js').parseString;
 var hbs = require("handlebars");
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+// var monk = require('monk');
+// var db = monk('localhost:27017/data');
+var bodyParser = require('body-parser');
+
+
+mongoose.connect('mongodb://localhost/mydata')
+
+var captionSchema = new Schema({
+    txt: String,
+    sta: Number,
+    dur: Number,
+    beginPar: {type: Boolean, default: false},
+    endPar: {type: Boolean, default: false}
+});
+
+var transcriptSchema = new Schema({
+    ytId: String,
+    captions: {type: [captionSchema], default: []},
+});
+
+var Caption = mongoose.model('caption', captionSchema);
+var Transcript = mongoose.model('transcript', transcriptSchema);
+
+var cap1 = new Caption({
+    txt: "some text",
+    sta: 1.23,
+    dur: 42.42
+});
+var transcript1 = new Transcript({
+    ytId: "sampleytid",
+    captions: [cap1, cap1]
+});
+
+transcript1.save(function (err, userObj) {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log('saved: ', userObj);
+    }
+});
+
+function toIdString(str) {
+    while (str.length < 24) {
+        str += '!';
+    }
+    return str;
+}
+
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
 
 var api = express();
+
+api.use(bodyParser.json()); // support json encoded bodies
+api.use(bodyParser.urlencoded({ 
+    extended: true, 
+    limit: '3mb',
+    parameterLimit: 10000
+})); // support encoded bodies
+
 api.get('/auto_captions/*', function(req, res) {
+    var ytId = req._parsedUrl.pathname.split('auto_captions/')[1].split('/')[0];
 	var url = "http://www.youtube.com"
-	var ytId = req._parsedUrl.pathname.split('auto_captions/')[1].split('/')[0];
 	var ytUrl = "http://www.youtube.com/watch?v=" + ytId;
     var options = {
         'uri': ytUrl,
@@ -63,33 +122,66 @@ api.get('/auto_captions/*', function(req, res) {
 
             request(options2, function(error, response, body) {
             	// console.log(caption_url + '&' + params);
-                console.log("innercallback");
             	if (!error && response.statusCode == 200) {
 		            var transcript = getXml(body);
 		            res.jsonp(transcript);
             	}
             }).on('error', function(err) {
-                console.log("ERROR");
                 if (err.code === 'ETIMEDOUT') {
                     res.jsonp({timeout: true});
-                    console.log("TimeoutInner!");
+                    // console.log(options2);
                 }
             });
 		}
 	}).on('error', function(err) {
       if (err.code === 'ETIMEDOUT') {
         res.jsonp({timeout: true});
-        console.log("Timeout!");
       }
     });
 });
+
+
+api.post('/postTranscript*', function(req, res) {
+    var madePost = false;
+    var transcript = req.body.transcript || {};
+    var ytId = req.body.ytId;
+
+    console.log(ytId);
+
+    if (transcript) {
+        var collection = db.get('transcripts');
+        collection.findAndModify({
+            'query': {
+                '_id': ObjectID.createFromHexString(toIdString(ytId))
+            },
+            'update': {
+                '$addToSet': transcript
+            },
+            'upsert': true
+        });
+        madePost = true;
+    }
+    res.jsonp({"madePost": madePost});
+});
+
+
 
 app.use('/static', express.static('views/static'));
 
 var homepage = function(req, res) {
 	var query = req.query || {};
 	var ytId = query.v || 'Ei8CFin00PY';
-	res.render('index', {'ytId': ytId});
+
+    var collection = db.get('transcripts');
+    collection.find({'ytId': ytId}, {}, function(e, docs) {
+        var transcript = docs[0];
+        var transcriptLoaded = !!transcript;
+        res.render('index', {
+            'ytId': ytId, 
+            'transcriptLoaded': transcriptLoaded,
+            'transcript': transcript
+        });
+    });
 };
 
 app.get('/', homepage);
