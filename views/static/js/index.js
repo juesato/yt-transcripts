@@ -296,7 +296,7 @@ function loadLinesIntoDOM(lines) {
 		async: true,
 		type: 'POST',
 		data: {
-			// 'transcript': clean,
+			'transcript': clean,
 			'ytId': curVideoId
 		},
 		complete: function() {

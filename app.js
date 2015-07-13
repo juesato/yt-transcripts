@@ -17,18 +17,23 @@ mongoose.connect('mongodb://localhost/mydata')
 var captionSchema = new Schema({
     txt: String,
     sta: Number,
-    dur: Number,
+    dur: {type: Number, default: -1},
     beginPar: {type: Boolean, default: false},
     endPar: {type: Boolean, default: false}
 });
 
 var transcriptSchema = new Schema({
-    ytId: String,
     captions: {type: [captionSchema], default: []},
+});
+
+var videoSchema = new Schema({
+    ytId: String,
+    transcripts: [transcriptSchema]
 });
 
 var Caption = mongoose.model('caption', captionSchema);
 var Transcript = mongoose.model('transcript', transcriptSchema);
+var Video = mongoose.model('video', videoSchema);
 
 var cap1 = new Caption({
     txt: "some text",
@@ -37,10 +42,16 @@ var cap1 = new Caption({
 });
 var transcript1 = new Transcript({
     ytId: "sampleytid",
-    captions: [cap1, cap1]
+    captions: [cap1]
 });
 
-transcript1.save(function (err, userObj) {
+var video1 = new Video({
+    ytId: "sampleytid",
+    // transcripts: [transcript1]
+    // transcripts: ['hi', 'not', 'right']
+});
+
+video1.save(function (err, userObj) {
     if (err) {
         console.log(err);
     } else {
@@ -149,17 +160,29 @@ api.post('/postTranscript*', function(req, res) {
     console.log(ytId);
 
     if (transcript) {
-        var collection = db.get('transcripts');
-        collection.findAndModify({
-            'query': {
-                '_id': ObjectID.createFromHexString(toIdString(ytId))
-            },
-            'update': {
-                '$addToSet': transcript
-            },
-            'upsert': true
+        // conditions, update, options. returns Query
+        Video.find({ytId: ytId}, function (err, docs) {
+            console.log(docs);  
+            if (docs.length) {
+                console.log("update video");
+                Video.findOneAndUpdate({ytId: ytId},
+                    {$addToSet: {transcripts: transcript}},
+                    {upsert: true}
+                );                  
+            }
+            else {
+                console.log("new video");
+                console.log(transcript[0])
+                var cur = new Transcript({captions: transcript});
+                console.log(cur);
+                Video.create({
+                    ytId: ytId,
+                    transcripts: [cur]
+                }, function (err, video) {
+                    if (err) console.log("err");
+                });                
+            }          
         });
-        madePost = true;
     }
     res.jsonp({"madePost": madePost});
 });
@@ -172,9 +195,11 @@ var homepage = function(req, res) {
 	var query = req.query || {};
 	var ytId = query.v || 'Ei8CFin00PY';
 
-    var collection = db.get('transcripts');
-    collection.find({'ytId': ytId}, {}, function(e, docs) {
-        var transcript = docs[0];
+    Video.findOne({'ytId': ytId}, {}, function(err, video) {
+        var transcript = null;
+        if (video) {
+            transcript = video.transcripts[0];
+        }
         var transcriptLoaded = !!transcript;
         res.render('index', {
             'ytId': ytId, 
