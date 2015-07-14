@@ -14,7 +14,6 @@ var maintainPosition = true;
 var autoscrolling = false;
 
 window.onYouTubeIframeAPIReady = function() {
-	// console.log("YouTube API Ready");
 
     player = new YT.Player('player', {
         videoId: curVideoId,
@@ -36,7 +35,6 @@ window.onYouTubeIframeAPIReady = function() {
 		}, 100);
     }
 
-    // console.log("Done Loading");
 };
 
 function setVideoTitle(ytId) {
@@ -117,7 +115,6 @@ function cleanTranscript(lines) {
 
 		cur.beginPar = lines[i].beginPar;
 		cur.endPar = lines[i].endPar;
-		// if (lines[i].beginPar) console.log(cur.txt);
 		
 		if (i == lines.length - 1) { // push everything else
 			clean.push(JSON.parse(JSON.stringify(cur)));
@@ -144,7 +141,6 @@ function cleanTranscript(lines) {
 				}				
 			}
 			else { // add on new line
-				// console.log(cur);
 				clean.push(JSON.parse(JSON.stringify(cur)));
 			}
 			cur.txt = ""; // Reset
@@ -166,8 +162,6 @@ function loadTranscript() {
 	var xhrMan, xhrAuto;
 
 	function onTranscriptUnavailable() {
-		console.log(xhrMan);
-		console.log("Neither transcript available");
 		return;
 	}
 
@@ -207,10 +201,7 @@ function loadTranscript() {
 		xhrAuto.done(function(html) {
 
 			var afterManualLoads = (function(htmljson) {
-				console.log("evaluated after xhrAutoDone");
 				return function() {
-					console.log("after man finishes");
-					console.log(xhrMan);
 		    		if (xhrMan.readyState==4 && xhrMan.status==200) {
 						console.log("Manual finished after auto");
 		    			return;
@@ -290,7 +281,6 @@ function loadLinesIntoDOM(lines) {
 		curCaptionTimes.push(clean[i].sta);
 	}
 
-	console.log("load lines into DOM");
 	$.ajax({
 		url:'/api/postTranscript',
 		async: true,
@@ -299,12 +289,8 @@ function loadLinesIntoDOM(lines) {
 			'transcript': clean,
 			'ytId': curVideoId
 		},
-		complete: function() {
-			console.log(this.url);
-		},
 		success: function(data) {
 			console.log("Posted to db");
-			console.log(data)
 		},
 		error: function(err) {
 			console.log("couldn't posted to db");
@@ -373,29 +359,26 @@ function getSpeakerNames(lines) {
 	return names;
 }
 
-function setDefaultWidths() {
-	console.log("setDefaultWidths");
-	var x1 = .5 * windowWidth - 22;
-	document.getElementById("left").style.width = x1.toString() + "px";
-	// document.getElementById("resize-handle").style.left = x1.toString() + "px";
-	document.getElementById("right").style.width = (.5 * windowWidth - 2).toString() + "px";
-}
-
 $(document).ready(function() {
 	if (!transcriptLoaded) {
 		loadTranscript();
 	}
 	else {
 		console.log("transcript loaded by backend");
-		var captionDivs = $(".caption");
+		var captionDivs = document.getElementsByClassName("caption");
 		for (var i = 0; i < captionDivs.length; i++) {
-			captionDivs[i].onclick = (function(j) {
+			var cur = captionDivs[i];
+			cur.onclick = (function(j) {
 				return function() {
 					setVideoTime(parseFloat(captionDivs[j].dataset.time));
 					maintainPosition = true;
 				};
 			})(i);
+			curCaptionDivs.push(cur);
+			var time = parseFloat(cur.dataset.time);
+			curCaptionTimes.push(time);
 		}
+		console.log(curCaptionTimes);
 	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
@@ -408,14 +391,6 @@ $(document).ready(function() {
 	  		seekToActiveCaption(0);
 		}, 100);	
 	}
-
-	// $("#help-icon").click(function() {
-	// 	console.log("Help icon clicked");
-	// 	if (!($("#help-popover").is(":visible"))) {
-	// 		console.log("Hidden");
-	// 		$("#help-popover").show();
-	// 	}
-	// });
 
 	$(document).click(function(event) {
 		if ($("#help-popover").is(":visible")) {
