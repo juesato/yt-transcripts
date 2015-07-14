@@ -3,7 +3,7 @@
 var player;
 var domWindow, windowWidth, windowHeight;
 var ytLoaded = false;
-var currentlyEditing = 0;
+var currentlyEditing;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -307,14 +307,8 @@ function loadLinesIntoDOM(lines, isManual) {
 					clicks = 0;
 				}
 			}
-			// return function() {
-			// 	setVideoTime(clean[j].sta);
-			// 	maintainPosition = true;
-			// };
 		})(i, iSpan);
 
-		// var caption = clean[i].txt.split(NEW_PAR_STR);
-		// iSpan.innerHTML = caption[0];
 		iSpan.innerHTML = clean[i].txt;
 		transcriptDiv.appendChild(iSpan);
 
@@ -329,9 +323,6 @@ function loadLinesIntoDOM(lines, isManual) {
 		curCaptionDivs.push(iSpan);
 		curCaptionTimes.push(clean[i].sta);
 	}
-
-
-	// makeCaptionsEditable();
 
 	$.ajax({
 		url:'/api/postTranscript',
@@ -350,14 +341,6 @@ function loadLinesIntoDOM(lines, isManual) {
 		}	
 	});
 	return 1;
-}
-
-function makeCaptionsEditable() {
-	$(".caption").bind('dblclick', function() {
-		$(this).attr('contentEditable', true);
-	}).blur(function() {
-		$(this).attr('contentEditable', false);
-	});
 }
 
 function upper_bound(val, arr, first, last) {
@@ -388,6 +371,12 @@ function focusCaption(newLine) {
 		scrollToCaption(focusedLine);
 		setTimeout(function(){autoscrolling = false;}, 50);
 	}
+}
+
+function makeCaptionEditable(s) {
+	s.style.tabIndex = 1;
+	s.setAttribute("contentEditable", true);
+	s.focus();
 }
 
 function scrollToCaption(caption) {
@@ -430,15 +419,14 @@ $(document).ready(function() {
 			var cur = captionDivs[i];
 			cur.onfocus = function(s) {
 				return function() {
-					currentlyEditing++;
+					currentlyEditing = s;
 					maintainPosition = false; // don't scroll while people are editing
-					console.log("focused s");
 					s.className = s.className + " editable";
 				};
 			}(cur);
 			cur.onblur = function(s) {
 				return function() {
-					currentlyEditing--;
+					currentlyEditing = null;
 					maintainPosition = true;
 					s.classList.remove("editable");
 					s.style.tabIndex = -1;
@@ -449,7 +437,7 @@ $(document).ready(function() {
 				var clicks = 0;
 				return function () {
 					if (s.classList.contains("editable")) {
-						return; // they're already editing this
+						return; // they're already editing thisgi
 					}
 
 					clicks++;
@@ -463,12 +451,7 @@ $(document).ready(function() {
 					}
 					else {
 						clearTimeout(timer);
-						s.style.tabIndex = 1;
-						s.setAttribute("contentEditable", true);
-						console.log("focus");
-						s.focus();
-						// s.style.color = "blue";
-						// s.style.background-color
+						makeCaptionEditable(s);
 						clicks = 0;
 					}
 				}
@@ -476,8 +459,6 @@ $(document).ready(function() {
 			curCaptionDivs.push(cur);
 			curCaptionTimes.push(time);
 		}
-
-		// makeCaptionsEditable();
 	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
@@ -542,8 +523,8 @@ document.onkeypress = function (e) {
     	maintainPosition = true;
   		seekToActiveCaption(true);
     }
-    if (e.keyCode == 32) { // space for start/stop
-    	if (currentlyEditing <= 0) {
+	if (!currentlyEditing) {
+	    if (e.keyCode == 32) { // space for start/stop
 	    	console.log("startstop");
 	    	if (player.getPlayerState() == 1) { // 1 is the code for playing
 	    		player.pauseVideo();
@@ -551,6 +532,16 @@ document.onkeypress = function (e) {
 	    	else {
 	    		player.playVideo();
 	    	}    		
+    	}
+    }
+    else {
+    	if (e.keyCode == 13) { //enter is submit
+    		e.preventDefault();
+    		var curIdx = currentlyEditing.id.split("caption")[1];
+    		var newText = currentlyEditing.innerHTML;
+    		console.log(curIdx + " " + newText);
+    		// This will become an AJAX post
+    		currentlyEditing.blur();
     	}
     }
 };
