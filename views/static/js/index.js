@@ -7,6 +7,7 @@ var currentlyEditing;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
+var NEW_SEC_STR = "<br><br>";
 
 var CLICKDELAY = 400;
 
@@ -94,7 +95,7 @@ function cleanLine(line) {
 
 var punctuation = ['.', '?', '!'];
 
-function cleanTranscript(lines) {
+function processManualTranscript(lines) {
 	var punctuation = ['.', '?', '!'];
 	var clean = [];
 	var cur = {};
@@ -158,7 +159,8 @@ function cleanTranscript(lines) {
 function processAutoTranscript(lines) {
 	var clean = [];
 	for (var i = 0; i < lines.length; i++) {
-		var line = cleanLine(lines[i]);
+		var line = lines[i];
+		line.txt = cleanLine(line.txt);
 		line.beginPar = true;
 		line.sta = lines[i].sta;
 	}
@@ -265,7 +267,6 @@ function captionClickHandler(curCaption, time) {
 
 function loadLinesIntoDOM(lines, isManual) {
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
-	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
 
 	for (var i = 0; i < lines.length; i++) {
 		var tmp = lines[i].txt.split(':')[0];
@@ -274,7 +275,7 @@ function loadLinesIntoDOM(lines, isManual) {
 		}
 	}
 	if (isManual) {
-		var clean = cleanTranscript(lines);
+		var clean = processManualTranscript(lines);
 	}
 	else {
 		var clean = processAutoTranscript(lines);
@@ -289,40 +290,21 @@ function loadLinesIntoDOM(lines, isManual) {
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
-		iSpan.class = "caption";
-		iSpan.onclick = (function(j, s) {
-			var clicks = 0;
-			return function (curCaption, time) {
-				clicks++;
-				if (clicks === 1) {
-					timer = setTimeout(function() {
-						setVideoTime(time);
-						maintainPosition = true;
-						clicks = 0;
-					}, CLICKDELAY);
-				}
-				else {
-					clearTimeout(timer);
-					curCaption.setAttribute("contentEditable", true);
-					clicks = 0;
-				}
-			}
-		})(i, iSpan);
-
+		iSpan.className = "caption";
 		iSpan.innerHTML = clean[i].txt;
+		iSpan.dataset.time = clean[i].sta;
 		transcriptDiv.appendChild(iSpan);
 
 		if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
 			var parBreak = document.createElement("span");
 			parBreak.class = "parBreak";
 			parBreak.id = "parBreak" + i;
-			parBreak.innerHTML = NEW_PAR_STR;
+			parBreak.innerHTML = NEW_SEC_STR;
 			transcriptDiv.appendChild(parBreak);
 		}
-
-		curCaptionDivs.push(iSpan);
-		curCaptionTimes.push(clean[i].sta);
 	}
+
+	document.body.dispatchEvent(transcriptLoadEvent);
 
 	$.ajax({
 		url:'/api/postTranscript',
@@ -408,57 +390,64 @@ function getSpeakerNames(lines) {
 	return names;
 }
 
+function onTranscriptLoad() {
+	// sets up click, focus, blur handlers for captions
+	// also defines curCaptionDivs and curCaptionTimes
+	var captionDivs = document.getElementsByClassName("caption");
+	for (var i = 0; i < captionDivs.length; i++) {
+		var cur = captionDivs[i];
+		cur.onfocus = function(s) {
+			return function() {
+				currentlyEditing = s;
+				maintainPosition = false; // don't scroll while people are editing
+				s.className = s.className + " editable";
+			};
+		}(cur);
+		cur.onblur = function(s) {
+			return function() {
+				currentlyEditing = null;
+				maintainPosition = true;
+				s.classList.remove("editable");
+				s.style.tabIndex = -1;
+			};
+		}(cur);
+		var time = parseFloat(cur.dataset.time);
+		cur.onclick = (function(t, s) {
+			var clicks = 0;
+			return function () {
+				if (s.classList.contains("editable")) {
+					return; // they're already editing thisgi
+				}
+
+				clicks++;
+				if (clicks === 1) {
+					timer = setTimeout(function() {
+						setVideoTime(t);
+						maintainPosition = true;
+						clicks = 0;
+					}, CLICKDELAY);
+				}
+				else {
+					clearTimeout(timer);
+					makeCaptionEditable(s);
+					clicks = 0;
+				}
+			}
+		})(time, cur);
+		curCaptionDivs.push(cur);
+		curCaptionTimes.push(time);
+	}
+}
+
+var transcriptLoadEvent = new CustomEvent("transcriptLoadEvent");
+document.body.addEventListener("transcriptLoadEvent", onTranscriptLoad, false);
+
 $(document).ready(function() {
 	if (!transcriptLoaded) {
 		loadTranscript();
 	}
 	else {
-		console.log("transcript loaded by backend");
-		var captionDivs = document.getElementsByClassName("caption");
-		for (var i = 0; i < captionDivs.length; i++) {
-			var cur = captionDivs[i];
-			cur.onfocus = function(s) {
-				return function() {
-					currentlyEditing = s;
-					maintainPosition = false; // don't scroll while people are editing
-					s.className = s.className + " editable";
-				};
-			}(cur);
-			cur.onblur = function(s) {
-				return function() {
-					currentlyEditing = null;
-					maintainPosition = true;
-					s.classList.remove("editable");
-					s.style.tabIndex = -1;
-				};
-			}(cur);
-			var time = parseFloat(cur.dataset.time);
-			cur.onclick = (function(t, s) {
-				var clicks = 0;
-				return function () {
-					if (s.classList.contains("editable")) {
-						return; // they're already editing thisgi
-					}
-
-					clicks++;
-					if (clicks === 1) {
-						timer = setTimeout(function() {
-							console.log("reset clickctr");
-							setVideoTime(t);
-							maintainPosition = true;
-							clicks = 0;
-						}, CLICKDELAY);
-					}
-					else {
-						clearTimeout(timer);
-						makeCaptionEditable(s);
-						clicks = 0;
-					}
-				}
-			})(time, cur);
-			curCaptionDivs.push(cur);
-			curCaptionTimes.push(time);
-		}
+		document.body.dispatchEvent(transcriptLoadEvent);
 	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
@@ -497,10 +486,8 @@ function seekToActiveCaption(forceScroll) {
 $("#right").scroll(function() {
 	if (!autoscrolling) {
 		maintainPosition = false;
-		// console.log("detected manual scrolling");
 	}
 	else {
-		// console.log("autoscroll");
 		autoscrolling = false;		
 	}
 });
@@ -519,13 +506,11 @@ window.onresize = function() {
 
 var keysDown = [];
 document.onkeyup = function(e) {
-	console.log("key");
 	e = e || event;
 	keysDown[e.keyCode] = e.type == 'keydown';
 }
 
 document.onkeydown = function(e) {
-	console.log("keydown");
 	e = e || event;
 	keysDown[e.keyCode] = e.type == 'keydown';
 
@@ -535,7 +520,6 @@ document.onkeydown = function(e) {
     }
 	if (!currentlyEditing) {
 	    if (e.keyCode == 32) { // space for start/stop
-	    	console.log("startstop");
 	    	if (player.getPlayerState() == 1) { // 1 is the code for playing
 	    		player.pauseVideo();
 	    	}
@@ -545,7 +529,6 @@ document.onkeydown = function(e) {
     	}
     }
     else {
-    	console.log("editing");
     	if (e.keyCode == 13) { //enter is submit
     		e.preventDefault();
     		var curIdx = currentlyEditing.id.split("caption")[1];
@@ -555,7 +538,6 @@ document.onkeydown = function(e) {
     		currentlyEditing.blur();
     	}
     	if (e.keyCode == 9) {
-    		console.log("tab");
     		e.preventDefault();
     		var curIdx = currentlyEditing.id.split("caption")[1];
     		var newIdx;
