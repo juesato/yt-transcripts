@@ -221,12 +221,15 @@ body {
   -moz-box-sizing: border-box;
   overflow: hidden;
   clear: left;
+  text-align: justify;
   /*height: 100%;*/
   /* need to set height eventually */ }
 
 #transcript span {
   display: inline;
   line-height: 20px;
+  padding-top: 4px;
+  padding-bottom: 1px;
   cursor: pointer;
   color: #333;
   font-family: Helvetica, Arial, sans-serif;
