@@ -3,11 +3,12 @@
 var player;
 var domWindow, windowWidth, windowHeight;
 var ytLoaded = false;
+var currentlyEditing = 0;
 var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
 
-var CLICKDELAY = 200;
+var CLICKDELAY = 400;
 
 var curCaptionDivs = [];
 var curCaptionTimes = [];
@@ -427,6 +428,20 @@ $(document).ready(function() {
 		var captionDivs = document.getElementsByClassName("caption");
 		for (var i = 0; i < captionDivs.length; i++) {
 			var cur = captionDivs[i];
+			cur.onfocus = function(s) {
+				return function() {
+					currentlyEditing++;
+					console.log("focused s");
+					s.className = s.className + " editable";
+				};
+			}(cur);
+			cur.onblur = function(s) {
+				return function() {
+					currentlyEditing--;
+					s.classList.remove("editable");
+					s.style.tabIndex = -1;
+				};
+			}(cur);
 			var time = parseFloat(cur.dataset.time);
 			cur.onclick = (function(t, s) {
 				var clicks = 0;
@@ -437,6 +452,7 @@ $(document).ready(function() {
 					clicks++;
 					if (clicks === 1) {
 						timer = setTimeout(function() {
+							console.log("reset clickctr");
 							setVideoTime(t);
 							maintainPosition = true;
 							clicks = 0;
@@ -444,9 +460,11 @@ $(document).ready(function() {
 					}
 					else {
 						clearTimeout(timer);
+						s.style.tabIndex = 1;
 						s.setAttribute("contentEditable", true);
-						s.className = s.className + " nounderline"; // TODO: remove later
-						s.style.color = "blue";
+						console.log("focus");
+						s.focus();
+						// s.style.color = "blue";
 						// s.style.background-color
 						clicks = 0;
 					}
@@ -522,14 +540,15 @@ document.onkeypress = function (e) {
   		seekToActiveCaption(true);
     }
     if (e.keyCode == 32) { // space for start/stop
-    	console.log("startstop");
-    	if (player.getPlayerState() == 1) { // 1 is the code for playing
-    		player.pauseVideo();
+    	if (currentlyEditing <= 0) {
+	    	console.log("startstop");
+	    	if (player.getPlayerState() == 1) { // 1 is the code for playing
+	    		player.pauseVideo();
+	    	}
+	    	else {
+	    		player.playVideo();
+	    	}    		
     	}
-    	else {
-    		player.playVideo();
-    	}
-
     }
 };
 
