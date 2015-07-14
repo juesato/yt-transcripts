@@ -431,6 +431,7 @@ $(document).ready(function() {
 			cur.onfocus = function(s) {
 				return function() {
 					currentlyEditing++;
+					maintainPosition = false; // don't scroll while people are editing
 					console.log("focused s");
 					s.className = s.className + " editable";
 				};
@@ -438,6 +439,7 @@ $(document).ready(function() {
 			cur.onblur = function(s) {
 				return function() {
 					currentlyEditing--;
+					maintainPosition = true;
 					s.classList.remove("editable");
 					s.style.tabIndex = -1;
 				};
@@ -446,9 +448,10 @@ $(document).ready(function() {
 			cur.onclick = (function(t, s) {
 				var clicks = 0;
 				return function () {
-					console.log(clicks);
-					// console.log(t);
-					// console.log(s);
+					if (s.classList.contains("editable")) {
+						return; // they're already editing this
+					}
+
 					clicks++;
 					if (clicks === 1) {
 						timer = setTimeout(function() {
