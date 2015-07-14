@@ -169,8 +169,7 @@ var homepage = function(req, res) {
 	var ytId = query.v || 'Ei8CFin00PY';
 
     Video.findOne({'ytId': ytId}, {}, function(err, video) {
-        console.log("video");
-        console.log(video);
+        // console.log(video);
         var transcript = null;
         if (video) {
             transcript = video.transcripts[0].captions;

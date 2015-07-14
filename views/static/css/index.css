@@ -236,6 +236,9 @@ body {
 #transcript span:hover {
   text-decoration: underline; }
 
+#transcript .nounderline {
+  text-decoration: none; }
+
 .boxed {
   border: 1px solid gray; }
 

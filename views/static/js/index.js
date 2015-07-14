@@ -7,6 +7,8 @@ var API_KEY = "AIzaSyDpIPdx2BEmRMkYIF_2PVmnMN6-toj-klA";
 
 var NEW_PAR_STR = "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;";
 
+var CLICKDELAY = 200;
+
 var curCaptionDivs = [];
 var curCaptionTimes = [];
 var focusedLine = -1;
@@ -153,8 +155,11 @@ function cleanTranscript(lines) {
 }
 
 function processAutoTranscript(lines) {
+	var clean = [];
 	for (var i = 0; i < lines.length; i++) {
-		lines[i].beginPar = true;
+		var line = cleanLine(lines[i]);
+		line.beginPar = true;
+		line.sta = lines[i].sta;
 	}
 	return lines;
 }
@@ -241,6 +246,22 @@ function loadTranscript() {
 	getAutoTranscript(curVideoId);
 }
 
+function captionClickHandler(curCaption, time) {
+	clicks++;
+	if (clicks === 1) {
+		timer = setTimeout(function() {
+			setVideoTime(time);
+			maintainPosition = true;
+			clicks = 0;
+		}, CLICKDELAY);
+	}
+	else {
+		clearTimeout(timer);
+		curCaption.setAttribute("contentEditable", true);
+		clicks = 0;
+	}
+}
+
 function loadLinesIntoDOM(lines, isManual) {
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -268,12 +289,28 @@ function loadLinesIntoDOM(lines, isManual) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
 		iSpan.class = "caption";
-		iSpan.onclick = (function(j) {
-			return function() {
-				setVideoTime(clean[j].sta);
-				maintainPosition = true;
-			};
-		})(i);
+		iSpan.onclick = (function(j, s) {
+			var clicks = 0;
+			return function (curCaption, time) {
+				clicks++;
+				if (clicks === 1) {
+					timer = setTimeout(function() {
+						setVideoTime(time);
+						maintainPosition = true;
+						clicks = 0;
+					}, CLICKDELAY);
+				}
+				else {
+					clearTimeout(timer);
+					curCaption.setAttribute("contentEditable", true);
+					clicks = 0;
+				}
+			}
+			// return function() {
+			// 	setVideoTime(clean[j].sta);
+			// 	maintainPosition = true;
+			// };
+		})(i, iSpan);
 
 		// var caption = clean[i].txt.split(NEW_PAR_STR);
 		// iSpan.innerHTML = caption[0];
@@ -292,6 +329,9 @@ function loadLinesIntoDOM(lines, isManual) {
 		curCaptionTimes.push(clean[i].sta);
 	}
 
+
+	// makeCaptionsEditable();
+
 	$.ajax({
 		url:'/api/postTranscript',
 		async: true,
@@ -309,6 +349,14 @@ function loadLinesIntoDOM(lines, isManual) {
 		}	
 	});
 	return 1;
+}
+
+function makeCaptionsEditable() {
+	$(".caption").bind('dblclick', function() {
+		$(this).attr('contentEditable', true);
+	}).blur(function() {
+		$(this).attr('contentEditable', false);
+	});
 }
 
 function upper_bound(val, arr, first, last) {
@@ -379,17 +427,36 @@ $(document).ready(function() {
 		var captionDivs = document.getElementsByClassName("caption");
 		for (var i = 0; i < captionDivs.length; i++) {
 			var cur = captionDivs[i];
-			cur.onclick = (function(j) {
-				return function() {
-					setVideoTime(parseFloat(captionDivs[j].dataset.time));
-					maintainPosition = true;
-				};
-			})(i);
-			curCaptionDivs.push(cur);
 			var time = parseFloat(cur.dataset.time);
+			cur.onclick = (function(t, s) {
+				var clicks = 0;
+				return function () {
+					console.log(clicks);
+					// console.log(t);
+					// console.log(s);
+					clicks++;
+					if (clicks === 1) {
+						timer = setTimeout(function() {
+							setVideoTime(t);
+							maintainPosition = true;
+							clicks = 0;
+						}, CLICKDELAY);
+					}
+					else {
+						clearTimeout(timer);
+						s.setAttribute("contentEditable", true);
+						s.className = s.className + " nounderline"; // TODO: remove later
+						s.style.color = "blue";
+						// s.style.background-color
+						clicks = 0;
+					}
+				}
+			})(time, cur);
+			curCaptionDivs.push(cur);
 			curCaptionTimes.push(time);
 		}
-		console.log(curCaptionTimes);
+
+		// makeCaptionsEditable();
 	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
