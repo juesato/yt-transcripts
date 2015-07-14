@@ -183,13 +183,15 @@ body {
      box-shadow:         inset 0 0 3px #000000;*/ }
 
 #main {
-  margin-top: 40px; }
+  margin-top: 40px;
+  float: left;
+  width: 100%; }
 
 .shading {
   padding: 0px;
-  height: 80vh;
+  height: 75vh;
   background-color: #f0f0f0;
-  position: absolute;
+  position: relative;
   box-shadow: 0 0 0 13px #f0f0f0;
   border-radius: 4px; }
 
@@ -301,3 +303,9 @@ body {
 
 td {
   padding: inherit; }
+
+#bot {
+  float: left;
+  width: 100%;
+  height: 60px;
+  padding-top: 25px; }
