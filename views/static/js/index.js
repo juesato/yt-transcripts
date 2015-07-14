@@ -517,8 +517,18 @@ window.onresize = function() {
  	resizeId = setTimeout(resizePlayer(), 100);
 }
 
-document.onkeypress = function (e) {
-    e = e || window.event;
+var keysDown = [];
+document.onkeyup = function(e) {
+	console.log("key");
+	e = e || event;
+	keysDown[e.keyCode] = e.type == 'keydown';
+}
+
+document.onkeydown = function(e) {
+	console.log("keydown");
+	e = e || event;
+	keysDown[e.keyCode] = e.type == 'keydown';
+
     if (e.keyCode == 82 || e.keyCode == 114) { // 'r' 'R'
     	maintainPosition = true;
   		seekToActiveCaption(true);
@@ -535,6 +545,7 @@ document.onkeypress = function (e) {
     	}
     }
     else {
+    	console.log("editing");
     	if (e.keyCode == 13) { //enter is submit
     		e.preventDefault();
     		var curIdx = currentlyEditing.id.split("caption")[1];
@@ -543,8 +554,23 @@ document.onkeypress = function (e) {
     		// This will become an AJAX post
     		currentlyEditing.blur();
     	}
+    	if (e.keyCode == 9) {
+    		console.log("tab");
+    		e.preventDefault();
+    		var curIdx = currentlyEditing.id.split("caption")[1];
+    		var newIdx;
+    		if (keysDown[16]) { // shift
+    			newIdx = Math.max(0, parseInt(curIdx) - 1);
+    		}
+    		else {
+    			newIdx = parseInt(curIdx) + 1;
+    		}
+    		var newCaption = document.getElementById("caption" + newIdx);
+    		currentlyEditing.blur();
+    		makeCaptionEditable(newCaption);
+    	}
     }
-};
+}
 
 function getYoutubeId(url) {
     var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
