@@ -382,7 +382,21 @@ function setDefaultWidths() {
 }
 
 $(document).ready(function() {
-	loadTranscript();
+	if (!transcriptLoaded) {
+		loadTranscript();
+	}
+	else {
+		console.log("transcript loaded by backend");
+		var captionDivs = $(".caption");
+		for (var i = 0; i < captionDivs.length; i++) {
+			captionDivs[i].onclick = (function(j) {
+				return function() {
+					setVideoTime(parseFloat(captionDivs[j].dataset.time));
+					maintainPosition = true;
+				};
+			})(i);
+		}
+	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
 	windowHeight = domWindow.height();

@@ -5,6 +5,8 @@ var parseXml = require('xml2js').parseString;
 var bodyParser = require('body-parser');
 var hbs = require("handlebars");
 
+var app = express();
+
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
@@ -13,20 +15,20 @@ mongoose.connect('mongodb://localhost/mydata')
 var Schema = mongoose.Schema;
 
 var captionSchema = new Schema({
-    txt: String,
-    sta: Number,
+    txt: {type: String, required: true},
+    sta: {type: Number, required: true},
     dur: {type: Number, default: -1},
     beginPar: {type: Boolean, default: false},
     endPar: {type: Boolean, default: false}
 });
 
 var transcriptSchema = new Schema({
-    captions: {type: [captionSchema], default: []},
+    captions: {type: [captionSchema], required: true},
 });
 
 var videoSchema = new Schema({
-    ytId: String,
-    transcripts: [transcriptSchema]
+    ytId: {type: String, required: true},
+    transcripts: {type: [transcriptSchema], default: []}
 });
 
 var Caption = mongoose.model('caption', captionSchema);
@@ -43,7 +45,6 @@ function toIdString(str) {
 app.set('views', __dirname + '/views');
 app.set('view engine', 'hbs');
 
-var app = express();
 var api = express();
 
 api.use(bodyParser.json()); // support json encoded bodies
@@ -134,6 +135,7 @@ api.post('/postTranscript*', function(req, res) {
     console.log(ytId);
 
     if (transcript) {
+        madePost = true;
         Video.find({ytId: ytId}, function (err, docs) {
             var cur = new Transcript({captions: transcript});
 
@@ -167,9 +169,16 @@ var homepage = function(req, res) {
 	var ytId = query.v || 'Ei8CFin00PY';
 
     Video.findOne({'ytId': ytId}, {}, function(err, video) {
+        console.log("video");
+        console.log(video);
         var transcript = null;
         if (video) {
-            transcript = video.transcripts[0];
+            transcript = video.transcripts[0].captions;
+        }
+        for (var i = 0; i < transcript.length - 1; i++) {
+            if (transcript[i+1].beginPar) {
+                transcript[i].endPar = true;
+            }
         }
         var transcriptLoaded = !!transcript;
         res.render('index', {

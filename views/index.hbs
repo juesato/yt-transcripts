@@ -60,6 +60,14 @@
 
   			<div id="right" class="col-xs-5 ">
   				<div id="transcript">
+            {{#if transcriptLoaded}}
+              {{#each transcript}}
+                <span id="caption{{@index}}" class="caption" data-time="{{this.sta}}">{{this.txt}}</span>
+                {{#if this.endPar}}
+                  <span class="parBreak" id="parBreak{{@index}}"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                {{/if}}
+              {{/each}}
+            {{/if}}
           </div>
   			</div>
       </div>
