@@ -29,11 +29,6 @@ body {
   -webkit-box-shadow: 0px 3px 10px 0px gray;
   box-shadow: 0px 3px 10px 0px gray; }
 
-/*.navbar {
-  position: relative;
-  border-radius: 0px;
-
-}*/
 #navright {
   position: relative;
   height: 100%; }
@@ -58,12 +53,10 @@ body {
     top: 0; }
     #help-popover #arrow-nest .arrow-up {
       position: absolute;
-      /*z-index: 11;*/
       top: -8px;
       /*top + border-bottom has to be navbar height*/
       right: 5px;
-      z-index: 11;
-      /*Frick this is based on the grid in percentage */ }
+      z-index: 11; }
   #help-popover #instructions {
     position: absolute;
     top: 0px;
@@ -109,28 +102,6 @@ body {
 #yt-link {
   width: 90%; }
 
-.wrapper button {
-  /*margin-left: -1px;*/
-  float: right;
-  position: absolute;
-  bottom: 0px;
-  top: 0px;
-  right: 0px;
-  width: 10%;
-  font-size: 14px;
-  /*background-color: #e3e2e2;*/
-  /*background-color: #FF5E5E;*/
-  background-color: red;
-  color: white;
-  font-weight: bold;
-  outline: 1px solid #bfbebe;
-  border-left: none;
-  border: none; }
-
-.wrapper button:hover {
-  /*background-color: #cccbcb;*/
-  background-color: #E33030; }
-
 .wrapper input {
   width: 90%;
   padding-top: 8px;
@@ -175,16 +146,12 @@ body {
 .wrapper input:focus {
   outline: none;
   background-color: white;
-  color: black;
-  /*  outline: 1px solid #2CBBFF;
-    outline-offset: 0px;
-     -moz-box-shadow:    inset 0 0 3px #000000;
-     -webkit-box-shadow: inset 0 0 3px #000000;
-     box-shadow:         inset 0 0 3px #000000;*/ }
+  color: black; }
 
 #main {
-  margin-top: 40px;
   float: left;
+  /* necessary because bootstrap floats divs */
+  margin-top: 40px;
   width: 100%; }
 
 #shading {
@@ -197,11 +164,9 @@ body {
 
 #left, #right {
   /*vertical-align:top;*/
-  display: inline;
-  float: left; }
+  display: inline; }
 
 #right {
-  float: right;
   height: 100%;
   overflow-y: scroll;
   font-size: 14px;
@@ -307,4 +272,5 @@ td {
   float: left;
   width: 100%;
   height: 60px;
-  padding-top: 25px; }
+  padding-top: 25px;
+  background-color: green; }

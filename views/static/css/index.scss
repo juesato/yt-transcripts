@@ -57,12 +57,6 @@ body {
   @include box-shadow(0px, 3px, 10px, 0px, gray);
 }
 
-/*.navbar {
-  position: relative;
-  border-radius: 0px;
-
-}*/
-
 #navright {
   position: relative;
   height: 100%;
@@ -90,11 +84,9 @@ body {
     top: 0;
     .arrow-up {
       position: absolute;
-      /*z-index: 11;*/
       top: -$arrowht; /*top + border-bottom has to be navbar height*/
       right: 5px;
       z-index: 11;
-      /*Frick this is based on the grid in percentage */
     }
 
   }
@@ -150,31 +142,6 @@ body {
   width: 90%;
 }
 
-
-.wrapper button {
-    /*margin-left: -1px;*/
-    float: right;
-    position: absolute;
-    bottom: 0px;
-    top: 0px;
-    right: 0px;
-    width: 10%;
-    font-size: 14px;
-    /*background-color: #e3e2e2;*/
-    /*background-color: #FF5E5E;*/
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    outline: 1px solid #bfbebe;
-    border-left: none;
-    border: none;
-}
-
-.wrapper button:hover {
-    /*background-color: #cccbcb;*/
-    background-color: #E33030;
-}
-
 .wrapper input {
   width: 90%;
   padding-top: 8px;
@@ -214,17 +181,12 @@ body {
   outline: none;
   background-color: $search-focus;
   color: black;
-/*  outline: 1px solid #2CBBFF;
-  outline-offset: 0px;
-   -moz-box-shadow:    inset 0 0 3px #000000;
-   -webkit-box-shadow: inset 0 0 3px #000000;
-   box-shadow:         inset 0 0 3px #000000;*/
 }
 
 
 #main {
+  float: left; /* necessary because bootstrap floats divs */
   margin-top: 40px;
-  float: left;
   width: 100%;
 }
 
@@ -242,11 +204,9 @@ body {
   /*vertical-align:top;*/
 
   display: inline;
-  float: left;
 }
 
 #right {
-  float: right;
   height: 100%;
   overflow-y: scroll;
 
