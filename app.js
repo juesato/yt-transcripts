@@ -174,10 +174,10 @@ var homepage = function(req, res) {
         var transcript = null;
         if (video) {
             transcript = video.transcripts[0].captions;
-        }
-        for (var i = 0; i < transcript.length - 1; i++) {
-            if (transcript[i+1].beginPar) {
-                transcript[i].endPar = true;
+            for (var i = 0; i < transcript.length - 1; i++) {
+                if (transcript[i+1].beginPar) {
+                    transcript[i].endPar = true;
+                }
             }
         }
         var transcriptLoaded = !!transcript;

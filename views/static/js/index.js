@@ -152,6 +152,13 @@ function cleanTranscript(lines) {
 	return clean;
 }
 
+function processAutoTranscript(lines) {
+	for (var i = 0; i < lines.length; i++) {
+		lines[i].beginPar = true;
+	}
+	return lines;
+}
+
 function setVideoTime(sec) {
 	player.seekTo(sec, true);
 }
@@ -234,7 +241,7 @@ function loadTranscript() {
 	getAutoTranscript(curVideoId);
 }
 
-function loadLinesIntoDOM(lines) {
+function loadLinesIntoDOM(lines, isManual) {
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 	// var new_par = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -244,8 +251,12 @@ function loadLinesIntoDOM(lines) {
 			lines[i].beginPar = true;
 		}
 	}
-
-	var clean = cleanTranscript(lines);
+	if (isManual) {
+		var clean = cleanTranscript(lines);
+	}
+	else {
+		var clean = processAutoTranscript(lines);
+	}
 	
 	var transcriptDiv = document.getElementById("transcript");
 	transcriptDiv.innerHTML = "";
