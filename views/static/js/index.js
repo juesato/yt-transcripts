@@ -19,6 +19,8 @@ var autoscrolling = false;
 
 var curLineUnedited;
 
+
+
 window.onYouTubeIframeAPIReady = function() {
 
     player = new YT.Player('player', {
@@ -32,15 +34,9 @@ window.onYouTubeIframeAPIReady = function() {
     });	
 
     ytLoaded = true;
-
-    if (windowWidth) { // if document loaded first
-    	resizePlayer();
-    	setVideoTitle();
-		window.setInterval(function(){
-	  		seekToActiveCaption(0);
-		}, 100);
+    if (windowWidth) {
+    	document.body.dispatchEvent(ytDocLoadEvent);
     }
-
 };
 
 function setVideoTitle(ytId) {
@@ -67,18 +63,16 @@ function setVideoTitle(ytId) {
 }
 
 function resizePlayer() {
-	$(document).ready(function() {
-		windowWidth = domWindow.width();
-		var shadingHeight = $(".shading").height();
-		// console.log("resizePlayer");
-		var playerWidth = Math.min(5.5 * windowWidth / 12, shadingHeight * .9 * 4/3);
-		var playerHeight = 3 * playerWidth / 4.0;
+	windowWidth = domWindow.width();
+	var shadingHeight = $(".shading").height();
+	// console.log("resizePlayer");
+	var playerWidth = Math.min(5.5 * windowWidth / 12, shadingHeight * .9 * 4/3);
+	var playerHeight = 3 * playerWidth / 4.0;
 
-		var nodePlayer = $("player");
-		nodePlayer.width(playerWidth);
+	var nodePlayer = $("player");
+	nodePlayer.width(playerWidth);
 
-		player.setSize(playerWidth, playerHeight);
-	});
+	player.setSize(playerWidth, playerHeight);
 }
 
 
@@ -446,8 +440,19 @@ function onTranscriptLoad() {
 	}
 }
 
+function onYtAndDocReady() {
+	resizePlayer();
+	setVideoTitle();
+	window.setInterval(function(){
+  		seekToActiveCaption(0);
+	}, 100);
+}
+
 var transcriptLoadEvent = new CustomEvent("transcriptLoadEvent");
 document.body.addEventListener("transcriptLoadEvent", onTranscriptLoad, false);
+
+var ytDocLoadEvent = new CustomEvent("ytDocLoadEvent");
+document.body.addEventListener("ytDocLoadEvent", onYtAndDocReady, false);
 
 $(document).ready(function() {
 	if (!transcriptLoaded) {
@@ -456,31 +461,26 @@ $(document).ready(function() {
 	else {
 		document.body.dispatchEvent(transcriptLoadEvent);
 	}
+	if (ytLoaded) {
+		document.body.dispatchEvent(ytDocLoadEvent);
+	}
 	domWindow = $(window);
 	windowWidth = domWindow.width();
 	windowHeight = domWindow.height();
+});
 
-	if (ytLoaded) { // if YouTube API loaded first
-		resizePlayer(); 
-		setVideoTitle(curVideoId);
-		window.setInterval(function(){
-	  		seekToActiveCaption(0);
-		}, 100);	
+$(document).click(function(event) {
+	if ($("#help-popover").is(":visible")) {
+		console.log("visible");
+		if (!($(event.target).closest('#instructions').length)) {
+			$("#help-popover").hide();
+		}
 	}
-
-	$(document).click(function(event) {
-		if ($("#help-popover").is(":visible")) {
-			console.log("visible");
-			if (!($(event.target).closest('#instructions').length)) {
-				$("#help-popover").hide();
-			}
+	else {
+		if ($(event.target).closest('#help-icon').length) {
+			$("#help-popover").show();
 		}
-		else {
-			if ($(event.target).closest('#help-icon').length) {
-				$("#help-popover").show();
-			}
-		}
-	});
+	}
 });
 
 function seekToActiveCaption(forceScroll) {
