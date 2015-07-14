@@ -148,7 +148,7 @@ function processManualTranscript(lines) {
 		}
 
 	}
-
+	clean.source = "yt_manual";
 	return clean;
 }
 
@@ -159,8 +159,10 @@ function processAutoTranscript(lines) {
 		line.txt = cleanLine(line.txt);
 		line.beginPar = true;
 		line.sta = lines[i].sta;
+		clean.push(line);
 	}
-	return lines;
+	clean.source = "yt_auto";
+	return clean;
 }
 
 function setVideoTime(sec) {
@@ -191,7 +193,7 @@ function loadTranscript() {
 					cur.sta = parseFloat(this.getAttribute('start'));
 					lines.push(cur);
 				});
-				loadLinesIntoDOM(lines);		
+				loadLinesIntoDOM(lines, true);		
 			},
 			'error': function(xhr, error) {
 				console.debug(xhr);
@@ -229,7 +231,7 @@ function loadTranscript() {
 							cur.txt = line._;
 							linesAuto.push(JSON.parse(JSON.stringify(cur)));
 						}
-						loadLinesIntoDOM(linesAuto);
+						loadLinesIntoDOM(linesAuto, false);
 					}
 				};
 			})(html);
@@ -305,7 +307,9 @@ function loadLinesIntoDOM(lines, isManual) {
 		type: 'POST',
 		data: {
 			'transcript': clean,
-			'ytId': curVideoId
+			'ytId': curVideoId,
+			'source': clean.source,
+			'edited': false
 		},
 		success: function(data) {
 			console.log("Posted to db");

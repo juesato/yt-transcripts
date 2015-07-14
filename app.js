@@ -22,7 +22,14 @@ var captionSchema = new Schema({
     endPar: {type: Boolean, default: false}
 });
 
+var TRANSCRIPT_SOURCES = {
+    values: ['yt_auto', 'my_auto', 'yt_manual'],
+    message: 'Enum validator failed for path `{PATH}` with value `{VALUE`'
+};
+
 var transcriptSchema = new Schema({
+    edited: {type: Boolean, required: true},
+    source: {type: String, required: true, enum: TRANSCRIPT_SOURCES},
     captions: {type: [captionSchema], required: true},
 });
 
@@ -137,7 +144,11 @@ api.post('/postTranscript*', function(req, res) {
     if (transcript) {
         madePost = true;
         Video.find({ytId: ytId}, function (err, docs) {
-            var cur = new Transcript({captions: transcript});
+            var cur = new Transcript({
+                source: req.body.source,
+                edited: req.body.edited,
+                captions: transcript
+            });
 
             if (docs.length) {
                 console.log("update video");
