@@ -63,10 +63,10 @@ function setVideoTitle(ytId) {
 }
 
 function resizePlayer() {
-	windowWidth = domWindow.width();
-	var shadingHeight = $(".shading").height();
+	var leftWidth = $("#left").width();
+	var shadingHeight = $("#shading").height();
 	// console.log("resizePlayer");
-	var playerWidth = Math.min(5.5 * windowWidth / 12, shadingHeight * .9 * 4/3);
+	var playerWidth = Math.min(.95 * leftWidth, shadingHeight * .9 * 4/3);
 	var playerHeight = 3 * playerWidth / 4.0;
 
 	var nodePlayer = $("player");
@@ -191,10 +191,7 @@ function loadTranscript() {
 					cur.sta = parseFloat(this.getAttribute('start'));
 					lines.push(cur);
 				});
-
-				$(document).ready(function() {
-					loadLinesIntoDOM(lines);		
-				});
+				loadLinesIntoDOM(lines);		
 			},
 			'error': function(xhr, error) {
 				console.debug(xhr);

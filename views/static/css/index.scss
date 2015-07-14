@@ -228,7 +228,7 @@ body {
   width: 100%;
 }
 
-.shading {
+#shading {
   padding: 0px;
   height: 75vh;
   background-color: #f0f0f0;
@@ -257,9 +257,8 @@ body {
 #left {
   top: 50%;
   transform: translateY(-50%);  
-  margin-right: 12px;
   padding-left: 0px;
-  padding-right: 0px;
+  padding-right: 15px;
   /*background: #faa;*/
 }
 
