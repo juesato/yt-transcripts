@@ -17,6 +17,8 @@ var focusedLine = -1;
 var maintainPosition = true;
 var autoscrolling = false;
 
+var curLineUnedited;
+
 window.onYouTubeIframeAPIReady = function() {
 
     player = new YT.Player('player', {
@@ -359,6 +361,7 @@ function makeCaptionEditable(s) {
 	s.style.tabIndex = 1;
 	s.setAttribute("contentEditable", true);
 	s.focus();
+	curLineUnedited = s.innerHTML;
 }
 
 function scrollToCaption(caption) {
@@ -405,6 +408,10 @@ function onTranscriptLoad() {
 		}(cur);
 		cur.onblur = function(s) {
 			return function() {
+				var newText = s.innerHTML;
+	    		if (newText != curLineUnedited) {
+	    			console.log("modified the text");
+	    		}
 				currentlyEditing = null;
 				maintainPosition = true;
 				s.classList.remove("editable");
@@ -533,7 +540,7 @@ document.onkeydown = function(e) {
     		e.preventDefault();
     		var curIdx = currentlyEditing.id.split("caption")[1];
     		var newText = currentlyEditing.innerHTML;
-    		console.log(curIdx + " " + newText);
+    		// console.log(curIdx + " " + newText);
     		// This will become an AJAX post
     		currentlyEditing.blur();
     	}
