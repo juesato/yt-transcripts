@@ -417,6 +417,7 @@ function onTranscriptLoad() {
 				maintainPosition = true;
 				s.classList.remove("editable");
 				s.style.tabIndex = -1;
+				s.contentEditable = false;
 			};
 		}(cur);
 		var time = parseFloat(cur.dataset.time);
