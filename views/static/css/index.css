@@ -66,8 +66,8 @@ body {
     position: absolute;
     top: 0px;
     right: 4%;
-    width: 25%;
-    max-width: 600px;
+    min-width: 25%;
+    max-width: 40%;
     background-color: white;
     -moz-box-shadow: -2px 2px 10px 0px gray;
     -webkit-box-shadow: -2px 2px 10px 0px gray;
@@ -232,7 +232,7 @@ body {
   padding-bottom: 15px; }
 
 .padsectiontop {
-  padding-top: 20px; }
+  padding-top: 25px; }
 
 .margin25 {
   margin: 25px; }
@@ -278,6 +278,9 @@ td {
 #bot {
   height: 80px;
   padding-top: 25px; }
+
+.pad15 {
+  padding: 15px; }
 
 #editingnotice {
   display: block;
