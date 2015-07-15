@@ -15,14 +15,12 @@
   max-height: 100%;
   max-width: 100%; }
 
-html {
-  width: 100%;
-  height: 100vh; }
-
-body {
+html, body {
   width: 100%;
   height: 100vh;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif; }
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0; }
 
 #navbar {
   /*background-color: #f0f0f0;*/
@@ -184,9 +182,14 @@ body {
   padding-right: 15px;
   /*background: #faa;*/ }
 
+.arrow-up, .arrow-down {
+  display: block; }
+
 #transcript {
   padding: 20px;
   padding-left: 0px;
+  padding-right: 0px;
+  min-width: 100%;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -197,7 +200,10 @@ body {
   /* need to set height eventually */ }
 
 #transcript p {
-  margin-bottom: 20px; }
+  margin: 0;
+  padding-bottom: 20px;
+  margin-right: 30px;
+  position: relative; }
 
 #transcript p span {
   display: inline;

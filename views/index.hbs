@@ -1,13 +1,13 @@
 <!doctype html>
 <head>
 	<title> YT Skimmer </title> 
-	<!-- TODO: Add favicon -->
+{{!-- Used for glyphicons --}}
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> 
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap-nonresp.min.css">
 	<link rel="stylesheet" type="text/css" href="static/css/index.css">
   <link rel="icon" type="image/png" href="static/img/favicon.ico">
   <script src="static/js/jquery-1.11.3.min.js"></script>
   <script src="static/js/bootstrap-nonresp.min.js"></script>
-  <!-- <script src="http://ajax.googleapsi.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script> -->
 	<!-- <meta name="viewport" content="initial-scale=1"> -->
 </head>
 <body>
@@ -41,12 +41,12 @@
               <td class="instruct-cmd">Double-click</td>
               <td class="instruct-desc">on a caption to edit it</td>
             </tr>
-{{!--             <tr class="padlinetop">
+            <tr class="padlinetop">
               <td class="instruct-cmd">Shift+Enter</td>
               <td class="instruct-desc"> (while editing) to split up a caption</td>
-            </tr> --}}
+            </tr>
           </table>        
-          <div class="help-content padsectiontop padlinebot">
+          <div class="help-content padlinetop padlinebot">
             Questions? Suggestions? Check out the <a href="about.html">About</a> page!
           </div>
         </div>
@@ -73,7 +73,6 @@
                 <span id="caption{{@index}}" class="caption" data-time="{{this.sta}}">{{this.txt}}</span>
                 {{#if this.endPar}}
                   </p>
-                  {{!-- <span class="parBreak" id="parBreak{{@index}}"><br><br></span> --}}
                 {{/if}}
               {{/each}}
             {{/if}}

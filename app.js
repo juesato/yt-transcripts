@@ -190,7 +190,6 @@ var homepage = function(req, res) {
         var transcriptType = "";
         if (video) {
             var avail = video.transcripts;
-            console.log(avail.length);
             var curTranscript = avail[avail.length-1];
             captions = curTranscript.captions;
             for (var i = 0; i < captions.length - 1; i++) {

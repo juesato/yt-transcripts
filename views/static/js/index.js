@@ -446,6 +446,39 @@ function onTranscriptLoad() {
 		curCaptionDivs.push(cur);
 		curCaptionTimes.push(time);
 	}
+
+	// TODO: this section should really be done in backend
+	var parDivs = document.getElementById("transcript").getElementsByTagName("p");
+	for (var i = 0; i < parDivs.length; i++) {
+		var cur = parDivs[i];
+		cur.id = "par" + i;
+		var arrowSpan = document.createElement("button");
+		arrowSpan.style.position = "absolute";
+		arrowSpan.style.right = "-30px";
+		arrowSpan.style.bottom = "8px";
+		arrowSpan.className = "btn btn-default arrow-button";
+		var arrowup = document.createElement("img");
+		// arrowup.className = "glyphicon glyphicon-arrow-up";
+		arrowup.src = "/static/iconic-png/arrow-thick-top-2x.png";
+		arrowup.className = "icon-arrow-up";
+		var arrowdown = document.createElement("img");
+		arrowdown.src = "/static/iconic-png/arrow-thick-bottom-2x.png";
+		arrowdown.className = "icon-arrow-down";
+		arrowSpan.appendChild(arrowdown);
+		arrowSpan.appendChild(arrowup);
+		cur.appendChild(arrowSpan);
+	}
+
+	$("#transcript p").on("mouseover", function(event) {
+		console.log("mouseover");
+		if (this == event.target) {
+			console.log(this.id);
+		}
+	});
+
+	$("#transcript").on("mouseover", function(event) {
+		console.log("mouse");
+	});
 }
 
 function onYtAndDocReady() {
