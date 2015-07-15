@@ -213,7 +213,7 @@ body {
   background-color: white;
   text-decoration: none; }
 
-#transcript p span.editable:hover {
+#transcript p span.caption.editable:hover {
   text-decoration: none; }
 
 #transcript p span.caption:hover {

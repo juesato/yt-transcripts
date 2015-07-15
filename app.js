@@ -202,15 +202,17 @@ var homepage = function(req, res) {
                 }
             }
         }
-        console.log(transcriptType);
+        // console.log(transcriptType);
+        var transcriptSource = video ? curTranscript.source : null;
+        var transcriptEdited = video ? curTranscript.edited : null;
 
         var transcriptLoaded = !!captions;
         res.render('index', {
             'ytId': ytId, 
             'transcriptLoaded': transcriptLoaded,
             'transcript': captions,
-            'transcriptSource': curTranscript.source,
-            'transcriptEdited': curTranscript.edited
+            'transcriptSource': transcriptSource,
+            'transcriptEdited': transcriptEdited,
             'transcriptType': transcriptType
         });
     });

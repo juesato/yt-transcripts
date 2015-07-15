@@ -399,9 +399,10 @@ function onTranscriptLoad() {
 		var cur = captionDivs[i];
 		cur.onfocus = function(s) {
 			return function() {
+				console.log("add editable");
 				currentlyEditing = s;
 				maintainPosition = false; // don't scroll while people are editing
-				s.className = s.className + " editable";
+				s.classList.add("editable");
 			};
 		}(cur);
 		cur.onblur = function(s) {
