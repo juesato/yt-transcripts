@@ -351,3 +351,33 @@ td {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+#botright {
+  position: relative;
+}
+
+#editing {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0;
+  display: none;
+}
+
+#thanks {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 10px;
+  display: none;
+  background-color: #C1F2A5;
+}
+
+#thanks-text {
+  padding: 5px;
+  padding-left: 4px;
+  width: 100%;
+  display: block;  
+}

@@ -406,6 +406,7 @@ function onTranscriptLoad() {
 				var newText = s.innerHTML;
 	    		if (newText != curLineUnedited) {
 	    			console.log("modified the text");
+	    			$("#editing").fadeIn(300);
 	    		}
 				currentlyEditing = null;
 				maintainPosition = true;
@@ -482,6 +483,23 @@ $(document).click(function(event) {
 			$("#help-popover").show();
 		}
 	}
+});
+
+$("#close-edits").click(function() {
+	$("#editing").fadeOut(300);
+});
+
+$("#save-changes").click(function() {
+	var fadeOutTime = 300;
+	var fadeInTime = 300;
+	var displayTime = 3000;
+	$("#editing").fadeOut(fadeOutTime);
+	setTimeout(function() {
+		$("#thanks").fadeIn(fadeInTime);
+		setTimeout(function() {
+			$("#thanks").fadeOut(fadeOutTime);
+		}, displayTime);
+	}, fadeOutTime + 200);
 });
 
 function seekToActiveCaption(forceScroll) {
