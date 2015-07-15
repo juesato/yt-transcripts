@@ -196,7 +196,7 @@ body {
   /*height: 100%;*/
   /* need to set height eventually */ }
 
-#transcript span {
+#transcript p span {
   display: inline;
   line-height: 20px;
   padding-top: 4px;
@@ -208,19 +208,16 @@ body {
   /*font-family: Helvetica, Arial, sans-serif;*/
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif; }
 
-#transcript span.editable {
+#transcript p span.editable {
   contentEditable: true;
   background-color: white;
   text-decoration: none; }
 
-#transcript span.editable:hover {
+#transcript p span.editable:hover {
   text-decoration: none; }
 
-#transcript span.caption:hover {
+#transcript p span.caption:hover {
   text-decoration: underline; }
-
-#transcript .nounderline {
-  text-decoration: none; }
 
 .boxed {
   border: 1px solid gray; }

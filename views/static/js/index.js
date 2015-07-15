@@ -107,16 +107,14 @@ function processManualTranscript(lines) {
 
 		if (cur.txt == "") {
 			cur.sta = lines[i].sta;
+			cur.beginPar = lines[i].beginPar;
 		}
 
 		cur.txt += (line + " ");
 		curSentenceLen++;
 		curdur += lines[i].dur;
-
-		cur.beginPar = lines[i].beginPar;
-		cur.endPar = lines[i].endPar;
-		
 		if (i == lines.length - 1) { // push everything else
+			cur.endPar = true;
 			clean.push(JSON.parse(JSON.stringify(cur)));
 			cur.txt = "";
 			curdur = 0;
@@ -141,6 +139,7 @@ function processManualTranscript(lines) {
 				}				
 			}
 			else { // add on new line
+				cur.endPar = cur.endPar || lines[i].endPar;
 				clean.push(JSON.parse(JSON.stringify(cur)));
 			}
 			cur.txt = ""; // Reset
@@ -148,7 +147,6 @@ function processManualTranscript(lines) {
 		}
 
 	}
-	clean.source = "yt_manual";
 	return clean;
 }
 
@@ -161,7 +159,6 @@ function processAutoTranscript(lines) {
 		line.sta = lines[i].sta;
 		clean.push(line);
 	}
-	clean.source = "yt_auto";
 	return clean;
 }
 
@@ -244,22 +241,6 @@ function loadTranscript() {
 	getAutoTranscript(curVideoId);
 }
 
-function captionClickHandler(curCaption, time) {
-	clicks++;
-	if (clicks === 1) {
-		timer = setTimeout(function() {
-			setVideoTime(time);
-			maintainPosition = true;
-			clicks = 0;
-		}, CLICKDELAY);
-	}
-	else {
-		clearTimeout(timer);
-		curCaption.setAttribute("contentEditable", true);
-		clicks = 0;
-	}
-}
-
 function loadLinesIntoDOM(lines, isManual) {
 	var speakerNames = getSpeakerNames(lines); // call on uncleaned version
 
@@ -277,6 +258,8 @@ function loadLinesIntoDOM(lines, isManual) {
 	}
 	
 	var transcriptDiv = document.getElementById("transcript");
+	transcriptDiv.dataset.source = isManual ? "yt_manual" : "yt_auto";
+	transcriptDiv.dataset.edited = false;
 	transcriptDiv.innerHTML = "";
 
 	curCaptionTimes.length = 0;
@@ -289,21 +272,34 @@ function loadLinesIntoDOM(lines, isManual) {
 		transcriptDiv.appendChild(transcriptType);
 	}
 
+	for (var i = 0; i < clean.length-1; i++) {
+		clean[i].endPar = clean[i].endPar || clean[i+1].beginPar;
+		clean[i+1].beginPar = clean[i].endPar;
+	}
+
+	var curPar;
 	for (var i = 0; i < clean.length; i++) {
+		console.log(clean[i].beginPar);
+		if (clean[i].beginPar) {
+			curPar = document.createElement("p");
+		}
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
 		iSpan.className = "caption";
 		iSpan.innerHTML = clean[i].txt;
 		iSpan.dataset.time = clean[i].sta;
-		transcriptDiv.appendChild(iSpan);
-
-		if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
-			var parBreak = document.createElement("span");
-			parBreak.className = "parBreak";
-			parBreak.id = "parBreak" + i;
-			parBreak.innerHTML = NEW_SEC_STR;
-			transcriptDiv.appendChild(parBreak);
+		curPar.appendChild(iSpan);
+		if (clean[i].endPar) {
+			transcriptDiv.appendChild(curPar);
 		}
+
+		// if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
+		// 	var parBreak = document.createElement("span");
+		// 	parBreak.className = "parBreak";
+		// 	parBreak.id = "parBreak" + i;
+		// 	parBreak.innerHTML = NEW_SEC_STR;
+		// 	transcriptDiv.appendChild(parBreak);
+		// }
 	}
 
 	document.body.dispatchEvent(transcriptLoadEvent);
@@ -315,14 +311,14 @@ function loadLinesIntoDOM(lines, isManual) {
 		data: {
 			'transcript': clean,
 			'ytId': curVideoId,
-			'source': clean.source,
+			'source': transcriptDiv.dataset.source,
 			'edited': false
 		},
 		success: function(data) {
-			console.log("Posted to db");
+			console.log("Posted to DB");
 		},
 		error: function(err) {
-			console.log("couldn't posted to db");
+			console.log("Couldn't post to DB");
 			console.log(err);
 		}	
 	});
@@ -426,7 +422,7 @@ function onTranscriptLoad() {
 			var clicks = 0;
 			return function () {
 				if (s.classList.contains("editable")) {
-					return; // they're already editing thisgi
+					return; // they're already editing this
 				}
 
 				clicks++;

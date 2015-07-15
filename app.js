@@ -187,9 +187,8 @@ var homepage = function(req, res) {
             var curTranscript = video.transcripts[0];
             captions = curTranscript.captions;
             for (var i = 0; i < captions.length - 1; i++) {
-                if (captions[i+1].beginPar) {
-                    captions[i].endPar = true;
-                }
+                captions[i+1].beginPar = captions[i+1].beginPar || captions[i].endPar;
+                captions[i].endPar = captions[i+1].beginPar;
             }
             if (curTranscript.edited) {
                 if (curTranscript.source == "yt_manual") {
@@ -210,6 +209,8 @@ var homepage = function(req, res) {
             'ytId': ytId, 
             'transcriptLoaded': transcriptLoaded,
             'transcript': captions,
+            'transcriptSource': curTranscript.source,
+            'transcriptEdited': curTranscript.edited
             'transcriptType': transcriptType
         });
     });

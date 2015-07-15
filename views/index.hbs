@@ -58,16 +58,20 @@
   			</div>
 
   			<div id="right" class="col-xs-5">
-  				<div id="transcript">
+  				<div id="transcript" data-source="{{transcriptSource}}" data-edited={{transcriptEdited}}>
             {{#if transcriptLoaded}}
               {{#if transcriptType}}
                 <span class="transcriptType">{{transcriptType}}</span>
                 <span><br><br></span>
               {{/if}}
               {{#each transcript}}
+                {{#if this.beginPar}}
+                  <p>
+                {{/if}}
                 <span id="caption{{@index}}" class="caption" data-time="{{this.sta}}">{{this.txt}}</span>
                 {{#if this.endPar}}
-                  <span class="parBreak" id="parBreak{{@index}}"><br><br></span>
+                  </p>
+                  {{!-- <span class="parBreak" id="parBreak{{@index}}"><br><br></span> --}}
                 {{/if}}
               {{/each}}
             {{/if}}
