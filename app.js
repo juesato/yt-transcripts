@@ -152,11 +152,16 @@ api.post('/postTranscript*', function(req, res) {
 
             if (docs.length) {
                 console.log("update video");
-                Video.findOneAndUpdate(
+                var newEntry = Video.findOneAndUpdate(
                     {ytId: ytId},
-                    {$addToSet: {transcripts: cur}},
-                    {upsert: true}
-                );                  
+                    {$push: {transcripts: cur}},
+                    {upsert: true},
+                    function(err, docs) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    }
+                );    
             }
             else {
                 console.log("new video");
@@ -184,7 +189,9 @@ var homepage = function(req, res) {
         var captions = null;
         var transcriptType = "";
         if (video) {
-            var curTranscript = video.transcripts[0];
+            var avail = video.transcripts;
+            console.log(avail.length);
+            var curTranscript = avail[avail.length-1];
             captions = curTranscript.captions;
             for (var i = 0; i < captions.length - 1; i++) {
                 captions[i+1].beginPar = captions[i+1].beginPar || captions[i].endPar;

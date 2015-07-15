@@ -407,6 +407,7 @@ function onTranscriptLoad() {
 		}(cur);
 		cur.onblur = function(s) {
 			return function() {
+				console.log("finished");
 				var newText = s.innerHTML;
 	    		if (newText != curLineUnedited) {
 	    			console.log("modified the text");
@@ -460,6 +461,24 @@ document.body.addEventListener("transcriptLoadEvent", onTranscriptLoad, false);
 var ytDocLoadEvent = new CustomEvent("ytDocLoadEvent");
 document.body.addEventListener("ytDocLoadEvent", onYtAndDocReady, false);
 
+function getCaptionsFromDOM() {
+	var captions = [];
+	var transcriptDiv = document.getElementById("transcript");
+	var parDivs = transcriptDiv.getElementsByTagName("p");
+	for (var i = 0; i < parDivs.length; i++) {
+		var plines = parDivs[i].getElementsByClassName("caption");
+		for (var j = 0; j < plines.length; j++) {
+			var cur = {};
+			cur.txt = plines[0].innerHTML;
+			cur.sta = plines[0].dataset.time;
+			cur.beginPar = (j == 0);
+			cur.endPar = (j == plines.length - 1);
+			captions.push(JSON.parse(JSON.stringify(cur)));
+		}
+	}
+	return captions;	
+}
+
 $(document).ready(function() {
 	if (!transcriptLoaded) {
 		loadTranscript();
@@ -505,7 +524,28 @@ $("#save-changes").click(function() {
 		}, displayTime);
 	}, fadeOutTime + 200);
 
+	// post to DB
+	var transcriptDiv = document.getElementById("transcript");
+	var captions = getCaptionsFromDOM();
 
+	$.ajax({
+		url:'/api/postTranscript',
+		async: true,
+		type: 'POST',
+		data: {
+			'transcript': captions,
+			'ytId': curVideoId,
+			'source': transcriptDiv.dataset.source,
+			'edited': true
+		},
+		success: function(data) {
+			console.log("Posted to DB");
+		},
+		error: function(err) {
+			console.log("Couldn't post to DB");
+			console.log(err);
+		}	
+	});
 });
 
 function seekToActiveCaption(forceScroll) {
@@ -546,6 +586,8 @@ document.onkeydown = function(e) {
 	e = e || event;
 	keysDown[e.keyCode] = e.type == 'keydown';
 
+	console.log(e.keyCode);
+
     if (e.keyCode == 82 || e.keyCode == 114) { // 'r' 'R'
     	maintainPosition = true;
   		seekToActiveCaption(true);
@@ -561,12 +603,10 @@ document.onkeydown = function(e) {
     	}
     }
     else {
-    	if (e.keyCode == 13) { //enter is submit
+    	if (e.keyCode == 13) { // enter 
+    		console.log("ENTER");
     		e.preventDefault();
-    		var curIdx = currentlyEditing.id.split("caption")[1];
-    		var newText = currentlyEditing.innerHTML;
-    		// console.log(curIdx + " " + newText);
-    		// This will become an AJAX post
+			currentlyEditing.classList.remove("editable"); // repeated because this needs to happen immediately
     		currentlyEditing.blur();
     	}
     	if (e.keyCode == 9) {

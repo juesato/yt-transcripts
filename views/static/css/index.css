@@ -196,6 +196,9 @@ body {
   /*height: 100%;*/
   /* need to set height eventually */ }
 
+#transcript p {
+  margin-bottom: 20px; }
+
 #transcript p span {
   display: inline;
   line-height: 20px;
