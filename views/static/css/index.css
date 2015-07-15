@@ -216,7 +216,7 @@ body {
 #transcript span.editable:hover {
   text-decoration: none; }
 
-#transcript span:hover {
+#transcript span.caption:hover {
   text-decoration: underline; }
 
 #transcript .nounderline {

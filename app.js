@@ -181,20 +181,36 @@ var homepage = function(req, res) {
 
     Video.findOne({'ytId': ytId}, {}, function(err, video) {
         // console.log(video);
-        var transcript = null;
+        var captions = null;
+        var transcriptType = "";
         if (video) {
-            transcript = video.transcripts[0].captions;
-            for (var i = 0; i < transcript.length - 1; i++) {
-                if (transcript[i+1].beginPar) {
-                    transcript[i].endPar = true;
+            var curTranscript = video.transcripts[0];
+            captions = curTranscript.captions;
+            for (var i = 0; i < captions.length - 1; i++) {
+                if (captions[i+1].beginPar) {
+                    captions[i].endPar = true;
+                }
+            }
+            if (curTranscript.edited) {
+                if (curTranscript.source == "yt_manual") {
+                    transcriptType = "This is an edited manual transcript.";
+                } else {
+                    transcriptType = "This is an edited auto-generated transcript.";
+                }
+            } else {
+                if (curTranscript.source != "yt_manual") {
+                    transcriptType = "This is an unedited auto-generated transcript.";
                 }
             }
         }
-        var transcriptLoaded = !!transcript;
+        console.log(transcriptType);
+
+        var transcriptLoaded = !!captions;
         res.render('index', {
             'ytId': ytId, 
             'transcriptLoaded': transcriptLoaded,
-            'transcript': transcript
+            'transcript': captions,
+            'transcriptType': transcriptType
         });
     });
 };

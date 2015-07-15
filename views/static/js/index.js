@@ -282,6 +282,13 @@ function loadLinesIntoDOM(lines, isManual) {
 	curCaptionTimes.length = 0;
 	curCaptionDivs.length = 0;
 
+	if (!isManual) {
+		var transcriptType = document.createElement("span");
+		transcriptType.className = "transcriptType";
+		transcriptType.innerHTML = "This is an automatically generated transcript.<br><br>";
+		transcriptDiv.appendChild(transcriptType);
+	}
+
 	for (var i = 0; i < clean.length; i++) {
 		var iSpan = document.createElement("span");
 		iSpan.id = "caption" + i;
@@ -292,7 +299,7 @@ function loadLinesIntoDOM(lines, isManual) {
 
 		if (i < clean.length - 1 && (clean[i].endPar || clean[i+1].beginPar)) {
 			var parBreak = document.createElement("span");
-			parBreak.class = "parBreak";
+			parBreak.className = "parBreak";
 			parBreak.id = "parBreak" + i;
 			parBreak.innerHTML = NEW_SEC_STR;
 			transcriptDiv.appendChild(parBreak);
@@ -500,6 +507,8 @@ $("#save-changes").click(function() {
 			$("#thanks").fadeOut(fadeOutTime);
 		}, displayTime);
 	}, fadeOutTime + 200);
+
+
 });
 
 function seekToActiveCaption(forceScroll) {
