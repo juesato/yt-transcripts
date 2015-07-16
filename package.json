@@ -1,0 +1,14 @@
+{
+	"name": "ytskimmer",
+	"version": "1.0.0",
+	"dependencies": {
+		"body-parser": "*",
+		"express": "*",
+		"http": "*",
+		"request": "*",
+		"xml2js": "*",
+		"handlebars": "*",
+		"mongodb": "*",
+		"mongoose": "*"
+	}
+}
