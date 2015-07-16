@@ -4,10 +4,9 @@
 	"dependencies": {
 		"body-parser": "*",
 		"express": "*",
-		"http": "*",
 		"request": "*",
 		"xml2js": "*",
-		"handlebars": "*",
+		"hbs": "*",
 		"mongodb": "*",
 		"mongoose": "*"
 	}
