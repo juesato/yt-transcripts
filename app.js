@@ -12,6 +12,9 @@ var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/mydata')
 
+var PROD = true;
+var PORT_NUMBER = 3000;
+
 var Schema = mongoose.Schema;
 
 var captionSchema = new Schema({
@@ -229,7 +232,7 @@ app.get('/watch', homepage);
 
 app.use('/api', api);
 
-var server = app.listen(3000, function() {
+var server = app.listen(PORT_NUMBER, function() {
 
 	var host = server.address().address;
 	var port = server.address().port;
