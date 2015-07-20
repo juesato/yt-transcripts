@@ -452,17 +452,14 @@ function onTranscriptLoad() {
 	for (var i = 0; i < parDivs.length; i++) {
 		var cur = parDivs[i];
 		cur.id = "par" + i;
-		var arrowSpan = document.createElement("button");
-		arrowSpan.style.position = "absolute";
-		arrowSpan.style.right = "-30px";
-		arrowSpan.style.bottom = "8px";
-		arrowSpan.className = "btn btn-default arrow-button";
+		if (i == parDivs.length - 1) break;
+		var arrowSpan = document.createElement("div");
+		arrowSpan.className = "merge-par-button";
 		var arrowup = document.createElement("img");
-		// arrowup.className = "glyphicon glyphicon-arrow-up";
-		arrowup.src = "/static/iconic-png/arrow-thick-top-2x.png";
+		arrowup.src = "/static/img/up_arrow.png";
 		arrowup.className = "icon-arrow-up";
 		var arrowdown = document.createElement("img");
-		arrowdown.src = "/static/iconic-png/arrow-thick-bottom-2x.png";
+		arrowdown.src = "/static/img/down_arrow.png";
 		arrowdown.className = "icon-arrow-down";
 		arrowSpan.appendChild(arrowdown);
 		arrowSpan.appendChild(arrowup);
