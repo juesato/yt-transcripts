@@ -14,9 +14,9 @@ var CLICKDELAY = 400;
 var curCaptionDivs = [];
 var curCaptionTimes = [];
 var focusedLine = -1;
+var lastActiveArrowButton;
 var maintainPosition = true;
 var autoscrolling = false;
-
 var curLineUnedited;
 
 
@@ -391,6 +391,12 @@ function getSpeakerNames(lines) {
 	return names;
 }
 
+function fadeOutActiveArrowButton() {
+	var active = $(".active-arrow-button");
+	active.fadeOut(100);
+	active.removeClass("active-arrow-button")
+}
+
 function onTranscriptLoad() {
 	// sets up click, focus, blur handlers for captions
 	// also defines curCaptionDivs and curCaptionTimes
@@ -449,6 +455,7 @@ function onTranscriptLoad() {
 
 	// TODO: this section should really be done in backend
 	var parDivs = document.getElementById("transcript").getElementsByTagName("p");
+
 	for (var i = 0; i < parDivs.length; i++) {
 		var cur = parDivs[i];
 		cur.id = "par" + i;
@@ -463,19 +470,50 @@ function onTranscriptLoad() {
 		arrowdown.className = "icon-arrow-down";
 		arrowSpan.appendChild(arrowdown);
 		arrowSpan.appendChild(arrowup);
+		arrowSpan.id = "arrow-button" + i;
+		arrowSpan.onmouseenter = function(cur) {
+			return function() {
+				var arrows = cur.childNodes;
+				setOpacity(arrows[0], 1.0);
+				setOpacity(arrows[1], 1.0);
+			};
+		}(arrowSpan);
+		arrowSpan.onmouseleave = function(cur) {
+			return function() {
+				var arrows = cur.childNodes;
+				setOpacity(arrows[0], 0.4);
+				setOpacity(arrows[1], 0.4);
+			};
+		}(arrowSpan);
+
+		cur.onmouseenter = function(cur) {
+			return function() {
+				fadeOutActiveArrowButton();
+				cur.classList.add("active-arrow-button");
+				if (cur != lastActiveArrowButton) {
+					$(cur).fadeIn(100);					
+				}
+				setTimeout(function() {
+					$(cur).fadeOut(800)
+				}, 8000);
+				lastActiveArrowButton = cur;
+			}
+		}(arrowSpan);
+		// cur.onmouseleave = function(cur) {
+		// 	return function() {
+		// 		setTimeout(function() {
+		// 			$(cur).fadeOut(400);
+		// 		}, 3000);
+		// 	}
+		// }(arrowSpan);
+
 		cur.appendChild(arrowSpan);
 	}
+}
 
-	$("#transcript p").on("mouseover", function(event) {
-		console.log("mouseover");
-		if (this == event.target) {
-			console.log(this.id);
-		}
-	});
-
-	$("#transcript").on("mouseover", function(event) {
-		console.log("mouse");
-	});
+function setOpacity(domObj, opacity) {
+	domObj.style.opacity = opacity;
+	domObj.style.filter = "alpha(opacity=" + opacity*100 + ")";
 }
 
 function onYtAndDocReady() {

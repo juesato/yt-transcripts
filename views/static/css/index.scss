@@ -231,11 +231,13 @@ html, body {
   width: 12px;
   opacity: 0.4;
   filter: alpha(opacity=40);
+  z-index: 20;
 }
 
 .merge-par-button {
   position: absolute;
-  right: -30px;
+  /*right: -30px;*/
+  right: 10px;
   bottom: 2px;
 }
 
@@ -257,7 +259,7 @@ html, body {
 #transcript p {
   margin: 0;
   padding-bottom: 20px;
-  margin-right: 40px;
+  padding-right: 35px;
   position: relative;
 }
 
