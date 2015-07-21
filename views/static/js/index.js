@@ -395,6 +395,7 @@ function getSpeakerNames(lines) {
 }
 
 function fadeOutActiveMergeParButton() {
+	clearTimeout(hideArrowTimeout);
 	var active = $(".active-merge-button");
 	active.fadeOut(100);
 	active.removeClass("active-merge-button")
@@ -515,23 +516,59 @@ function addMergeParButtons() {
 					}
 				}
 				nextPar.parentNode.removeChild(nextPar);
+				spacer = document.getElementById("space-pars-" + j);
+				console.log(spacer);
+				spacer.parentNode.removeChild(spacer);
 				$("#editing").fadeIn(300);
 			};
 		}(i, cur);
+		var spacer = cur;
+		while (!(spacer.classList && spacer.classList.contains("space-pars"))) {
+			spacer = spacer.nextSibling;
+		}
+		spacer.id = "space-pars-" + i;
 
-		cur.onmouseenter = function(cur) {
+		// hover behaviors
+		spacer.onmouseenter = function(j, curButton) {
 			return function() {
-				fadeOutActiveMergeParButton();
-				cur.classList.add("active-merge-button");
-				if (cur != lastActiveArrowButton) {
-					$(cur).fadeIn(100);					
+				if (j != lastActiveArrowButton) {
+					$(curButton).fadeIn(100);					
+					fadeOutActiveMergeParButton();
+					hideArrowTimeout = setTimeout(function() {
+						$(curButton).fadeOut(600)
+					}, 4000);
 				}
-				hideArrowTimeout = setTimeout(function() {
-					$(cur).fadeOut(800)
-				}, 7000);
-				lastActiveArrowButton = cur;
+				else if (!($(curButton).is(":visible"))) {
+					$(curButton).fadeIn(100);					
+					hideArrowTimeout = setTimeout(function() {
+						$(curButton).fadeOut(600)
+					}, 4000);	
+				}
+				curButton.classList.add("active-merge-button");
+				lastActiveArrowButton = j;				
 			}
-		}(arrowSpan);
+		}(i, arrowSpan);
+
+		cur.onmouseenter = function(j, curButton) {
+			return function() {				
+				if (j != lastActiveArrowButton) {
+					$(curButton).fadeIn(100);					
+					fadeOutActiveMergeParButton();
+					hideArrowTimeout = setTimeout(function() {
+						$(curButton).fadeOut(800)
+					}, 4000);
+				}
+				curButton.classList.add("active-merge-button");
+				lastActiveArrowButton = j;
+			}
+		}(i, arrowSpan);
+		// cur.onmouseleave = function() {
+		// 	// allow to re-appear after 1.5 seconds.
+		// 	// set to avoid glitching
+		// 	setTimeout(function() {                                                                                                      
+		// 		lastActiveArrowButton = null;
+		// 	}, 1500);
+		// }
 
 		cur.appendChild(arrowSpan);
 	}
@@ -540,7 +577,7 @@ function addMergeParButtons() {
 function setOpacity(domObj, opacity) {
 	domObj.style.opacity = opacity;
 	domObj.style.filter = "alpha(opacity=" + opacity*100 + ")";
-}
+}                                                                                                    
 
 function onYtAndDocReady() {
 	resizePlayer();

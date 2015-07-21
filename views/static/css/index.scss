@@ -237,8 +237,13 @@ html, body {
   position: absolute;
   /*right: -30px;*/
   right: 10px;
-  bottom: 2px;
+  bottom: -18px;
   display: none;
+}
+
+.space-pars {
+  height: 20px;
+  width: 100%;
 }
 
 #transcript {
@@ -258,7 +263,7 @@ html, body {
 
 #transcript p {
   margin: 0;
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
   padding-right: 35px;
   position: relative;
 }
