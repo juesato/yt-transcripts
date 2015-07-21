@@ -15,6 +15,7 @@ var curCaptionDivs = [];
 var curCaptionTimes = [];
 var focusedLine = -1;
 var lastActiveArrowButton;
+var hideArrowTimeout;
 var maintainPosition = true;
 var autoscrolling = false;
 var curLineUnedited;
@@ -391,10 +392,10 @@ function getSpeakerNames(lines) {
 	return names;
 }
 
-function fadeOutActiveArrowButton() {
-	var active = $(".active-arrow-button");
+function fadeOutActiveMergeParButton() {
+	var active = $(".active-merge-button");
 	active.fadeOut(100);
-	active.removeClass("active-arrow-button")
+	active.removeClass("active-merge-button")
 }
 
 function onTranscriptLoad() {
@@ -473,6 +474,10 @@ function onTranscriptLoad() {
 		arrowSpan.id = "arrow-button" + i;
 		arrowSpan.onmouseenter = function(cur) {
 			return function() {
+				clearTimeout(hideArrowTimeout);
+				hideArrowTimeout = setTimeout(function() {
+					$(cur).fadeOut(800)
+				}, 5000);
 				var arrows = cur.childNodes;
 				setOpacity(arrows[0], 1.0);
 				setOpacity(arrows[1], 1.0);
@@ -488,24 +493,18 @@ function onTranscriptLoad() {
 
 		cur.onmouseenter = function(cur) {
 			return function() {
-				fadeOutActiveArrowButton();
-				cur.classList.add("active-arrow-button");
+				fadeOutActiveMergeParButton();
+				cur.classList.add("active-merge-button");
 				if (cur != lastActiveArrowButton) {
+					console.log("fade in");
 					$(cur).fadeIn(100);					
 				}
-				setTimeout(function() {
+				hideArrowTimeout = setTimeout(function() {
 					$(cur).fadeOut(800)
-				}, 8000);
+				}, 7000);
 				lastActiveArrowButton = cur;
 			}
 		}(arrowSpan);
-		// cur.onmouseleave = function(cur) {
-		// 	return function() {
-		// 		setTimeout(function() {
-		// 			$(cur).fadeOut(400);
-		// 		}, 3000);
-		// 	}
-		// }(arrowSpan);
 
 		cur.appendChild(arrowSpan);
 	}
@@ -654,8 +653,7 @@ document.onkeyup = function(e) {
 document.onkeydown = function(e) {
 	e = e || event;
 	keysDown[e.keyCode] = e.type == 'keydown';
-
-	console.log(e.keyCode);
+	// console.log(e.keyCode);
 
     if (e.keyCode == 82 || e.keyCode == 114) { // 'r' 'R'
     	maintainPosition = true;

@@ -187,14 +187,14 @@ html, body {
   height: 12px;
   width: 12px;
   opacity: 0.4;
-  filter: alpha(opacity=40);
-  z-index: 20; }
+  filter: alpha(opacity=40); }
 
 .merge-par-button {
   position: absolute;
   /*right: -30px;*/
   right: 10px;
-  bottom: 2px; }
+  bottom: 2px;
+  display: none; }
 
 #transcript {
   padding: 20px;
