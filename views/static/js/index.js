@@ -282,7 +282,7 @@ function loadLinesIntoDOM(lines, isManual) {
 
 	var curPar;
 	for (var i = 0; i < clean.length; i++) {
-		console.log(clean[i].beginPar);
+		// console.log(clean[i].beginPar);
 		if (clean[i].beginPar) {
 			curPar = document.createElement("p");
 		}
@@ -455,7 +455,10 @@ function onTranscriptLoad() {
 		curCaptionDivs.push(cur);
 		curCaptionTimes.push(time);
 	}
+	addMergeParButtons();
+}
 
+function addMergeParButtons() {
 	// TODO: this section should really be done in backend
 	var parDivs = document.getElementById("transcript").getElementsByTagName("p");
 	numCaptions = parDivs.length;
@@ -503,9 +506,6 @@ function onTranscriptLoad() {
 					}
 					j++;					
 				}
-				console.log(toInsert);
-				console.log("help pls");
-				console.log(toInsert.length);
 				var len = toInsert.length;
 				for (var z = 0; z < len; z++) { // ignore last element, it's a button
 					if (toInsert[z].id && toInsert[z].classList.contains("caption")) {
@@ -513,8 +513,6 @@ function onTranscriptLoad() {
 						z--; // the element disappears from toInsert.length
 						len--;
 					}
-					// console.log(z);
-					// curPar.appendChild(toInsert[z]);
 				}
 				nextPar.parentNode.removeChild(nextPar);
 				$("#editing").fadeIn(300);
@@ -526,7 +524,6 @@ function onTranscriptLoad() {
 				fadeOutActiveMergeParButton();
 				cur.classList.add("active-merge-button");
 				if (cur != lastActiveArrowButton) {
-					console.log("fade in");
 					$(cur).fadeIn(100);					
 				}
 				hideArrowTimeout = setTimeout(function() {
@@ -625,7 +622,6 @@ $("#save-changes").click(function() {
 	// post to DB
 	var transcriptDiv = document.getElementById("transcript");
 	var captions = getCaptionsFromDOM();
-	console.log(captions);
 	$.ajax({
 		url:'/api/postTranscript',
 		async: true,
@@ -640,8 +636,7 @@ $("#save-changes").click(function() {
 			console.log("Posted to DB");
 		},
 		error: function(err) {
-			console.log("Couldn't post to DB");
-			console.log(err);
+			console.error(err);
 		}	
 	});
 });
@@ -670,7 +665,6 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var resizeId;
 window.onresize = function() {
  	clearTimeout(resizeId);
- 	console.log("resize");
  	resizeId = setTimeout(resizePlayer(), 100);
 }
 
@@ -701,7 +695,6 @@ document.onkeydown = function(e) {
     }
     else {
     	if (e.keyCode == 13) { // enter 
-    		console.log("ENTER");
     		e.preventDefault();
 			currentlyEditing.classList.remove("editable"); // repeated because this needs to happen immediately
     		currentlyEditing.blur();
