@@ -11,8 +11,10 @@ var NEW_SEC_STR = "<br><br>";
 
 var CLICKDELAY = 400;
 
+var numCaptions;
 var curCaptionDivs = [];
 var curCaptionTimes = [];
+
 var focusedLine = -1;
 var lastActiveArrowButton;
 var hideArrowTimeout;
@@ -456,8 +458,8 @@ function onTranscriptLoad() {
 
 	// TODO: this section should really be done in backend
 	var parDivs = document.getElementById("transcript").getElementsByTagName("p");
-
-	for (var i = 0; i < parDivs.length; i++) {
+	numCaptions = parDivs.length;
+	for (var i = 0; i < numCaptions; i++) {
 		var cur = parDivs[i];
 		cur.id = "par" + i;
 		if (i == parDivs.length - 1) break;
@@ -490,6 +492,34 @@ function onTranscriptLoad() {
 				setOpacity(arrows[1], 0.4);
 			};
 		}(arrowSpan);
+
+		arrowSpan.onclick = function(j, curPar) {
+			return function() {
+				var nextPar;
+				while (!toInsert && j < numCaptions + 3) {
+					nextPar = document.getElementById("par" + (j+1));
+					if (nextPar) {
+						var toInsert = nextPar.childNodes;
+					}
+					j++;					
+				}
+				console.log(toInsert);
+				console.log("help pls");
+				console.log(toInsert.length);
+				var len = toInsert.length;
+				for (var z = 0; z < len; z++) { // ignore last element, it's a button
+					if (toInsert[z].id && toInsert[z].classList.contains("caption")) {
+						$(curPar).append($("#" + toInsert[z].id));
+						z--; // the element disappears from toInsert.length
+						len--;
+					}
+					// console.log(z);
+					// curPar.appendChild(toInsert[z]);
+				}
+				nextPar.parentNode.removeChild(nextPar);
+				$("#editing").fadeIn(300);
+			};
+		}(i, cur);
 
 		cur.onmouseenter = function(cur) {
 			return function() {
@@ -537,8 +567,8 @@ function getCaptionsFromDOM() {
 		var plines = parDivs[i].getElementsByClassName("caption");
 		for (var j = 0; j < plines.length; j++) {
 			var cur = {};
-			cur.txt = plines[0].innerHTML;
-			cur.sta = plines[0].dataset.time;
+			cur.txt = plines[j].innerHTML;
+			cur.sta = plines[j].dataset.time;
 			cur.beginPar = (j == 0);
 			cur.endPar = (j == plines.length - 1);
 			captions.push(JSON.parse(JSON.stringify(cur)));
@@ -595,7 +625,7 @@ $("#save-changes").click(function() {
 	// post to DB
 	var transcriptDiv = document.getElementById("transcript");
 	var captions = getCaptionsFromDOM();
-
+	console.log(captions);
 	$.ajax({
 		url:'/api/postTranscript',
 		async: true,
