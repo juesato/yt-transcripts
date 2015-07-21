@@ -282,7 +282,6 @@ function loadLinesIntoDOM(lines, isManual) {
 
 	var curPar;
 	for (var i = 0; i < clean.length; i++) {
-		// console.log(clean[i].beginPar);
 		if (clean[i].beginPar) {
 			curPar = document.createElement("p");
 		}
@@ -321,8 +320,7 @@ function loadLinesIntoDOM(lines, isManual) {
 			console.log("Posted to DB");
 		},
 		error: function(err) {
-			console.log("Couldn't post to DB");
-			console.log(err);
+			console.error("Couldn't post to DB");
 		}	
 	});
 	return 1;
@@ -366,8 +364,14 @@ function makeCaptionEditable(s) {
 }
 
 function scrollToCaption(caption) {
-	$("#right").scrollTop(curCaptionDivs[caption].offsetTop - .2 * windowHeight);
-	// autoscrolling = false;
+	var caption = document.getElementById("caption"+caption); 
+	var par = caption.parentNode;
+	if (caption.offsetTop - par.offsetTop > .6 * windowHeight) {
+		$("#right").scrollTop(caption.offsetTop - .2*windowHeight);
+	}
+	else {
+		$("#right").scrollTop(par.offsetTop - .2*windowHeight);
+	}
 }
 
 function getSpeakerNames(lines) {
@@ -517,7 +521,6 @@ function addMergeParButtons() {
 				}
 				nextPar.parentNode.removeChild(nextPar);
 				spacer = document.getElementById("space-pars-" + j);
-				console.log(spacer);
 				spacer.parentNode.removeChild(spacer);
 				$("#editing").fadeIn(300);
 			};
