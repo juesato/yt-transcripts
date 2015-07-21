@@ -1,6 +1,16 @@
 # YouTube Interactive Transcripts
 
-Website for interactive transcripts. Designed to make video lectures easier to follow along, and quickly find relevant sections.
+YT Skimmer is designed to enhance the online classroom experience by allowing students to find the information they want through use of interactive transcripts. It streamlines the process of finding the exact portion of each video containing the relevant information, rather than watching the whole video. 
+
+This tool is still under development, possible areas to extend functionality are:
+
+ * Adding in automatic transcript generation.
+ * Creating online classes and lecture series
+ * Allowing users to add questions to videos, and answer other questions.
+ * Creating users, and allowing users to accumulate reputation for contributions.
+
+Feel free to drop me a line if you're interested in contributing or have any suggestions: juesato AT mit DOT edu.
+
 
 ### Setup ###
 
