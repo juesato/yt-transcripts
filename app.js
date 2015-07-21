@@ -183,6 +183,9 @@ api.post('/postTranscript*', function(req, res) {
 
 app.use('/static', express.static('views/static'));
 
+app.use('/about*', express.static('views/static/about.html'));
+app.use('/about/*', express.static('views/static/about.html'));
+
 var homepage = function(req, res) {
 	var query = req.query || {};
 	var ytId = query.v || 'Ei8CFin00PY';
